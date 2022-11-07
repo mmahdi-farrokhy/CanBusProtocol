@@ -1,3 +1,6 @@
+		// Wait For The Given Time (ms) Until The Given Number Of Bytes Is Read From The Buffer
+		// If The Read Number Of Bytes In This Time Is Less Than Excepted Returns False
+		// Else Returns True
 		public static bool WaitForBytes(int BytesToCheck = 1, int WaitingTime = 100)
         {
             bool result = false;
@@ -15,12 +18,8 @@
         }
         
 
-        // This Function Receives The Data From Buffer
-        // As The Response Of The ECU.
-        // Sample Outputs:
-        // 1) 07 E8 02 7E 00 55 55 55 55 55
-        // 2) 07 E8 0A 01 02 03 04 05 06 60 6D 11 07 E8 21 07 08 09 10 55 55 55
-        // 3) 07 E8 15 01 02 03 04 05 06 60 6D 11 07 E8 08 21 06 07 08 09 10 11 12 60 6D 11 07 E8 08 22 13 14 15 16 17 18 19 60 6D 11 07 E8 08 23 20 21 55 55 55 55 55
+        // This Function Receives The Data From Buffer As The Response Of The ECU
+		// And Removes The Unwanted Bytes From It. Like 10, 21..22..23, Or 6D 11
         public static bool ReadMsg(ref string Response, ref string FrameByte)
         {
             Response = "";

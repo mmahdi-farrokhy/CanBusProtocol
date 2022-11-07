@@ -6,8 +6,6 @@ using System.Threading;
 
 namespace ProMap
 {
-    // In Class Baraye Download ECU haye CAN ast.
-    class DownloadCan
     {
         public static int ProcBarVal = 0;
         public static int Frame_Len = 0xF0;
@@ -18,36 +16,32 @@ namespace ProMap
         private static int Start_Address2 = 0;
         private static int cmd_Length2 = 0;
 
-        // Data haye simulator in tabe dar masir zir zakhire shode ast
-        // E:\User\work\MASTER DIAG\M.Mahdi Farrokhy\Remap Files\EasyU CAN\EasyU Download Simulator
-
-        // Start Address Of Zone 2 is 0x20000
-        // Command Length Of Zone 2 is 0x20000
+		
         public static bool Crouse_EasyU25()
         {
             ProcBarVal = 0;
             string resp = "";
 
             // Zone 1 Variables
-            Start_Address1 = DumpConnection.Start_Address();           // Start Address Of Zone 1
-            End_Address1 = DumpConnection.End_Address();               // Start Address Of Zone 1
-            cmd_Length1 = Start_Address1 - End_Address1;            // Length Of Zone 1
+            Start_Address1 = DumpConnection.Start_Address();            // Start Address Of Zone 1
+            End_Address1 = DumpConnection.End_Address();                // Start Address Of Zone 1
+            cmd_Length1 = Start_Address1 - End_Address1;                // Length Of Zone 1
 
-            int NumOfFrames1 = cmd_Length1 / Frame_Len;             // Number Of Commands Of Zone 1 With The Lenght F1
-            int rest1 = cmd_Length1 % Frame_Len;                    // Length Of The Last Frame
-            int last_add1 = End_Address1 - rest1 + 1;   // Start Address Of The Last Frame
+            int NumOfFrames1 = cmd_Length1 / Frame_Len;             	// Number Of Commands Of Zone 1 With The Lenght F1
+            int rest1 = cmd_Length1 % Frame_Len;                    	// Length Of The Last Frame
+            int last_add1 = End_Address1 - rest1 + 1;   				// Start Address Of The Last Frame
 
             string[] cmd1 = new string[cmd_Length1];
             string[] Frames1 = new string[NumOfFrames1];
             string[] Final_cmd1 = new string[NumOfFrames1 + 1];
 
             // Zone 2 Variables
-            Start_Address2 = 0x20000;                               // Start Address Of Zone 1
-            cmd_Length2 = 0x20000;                                  // Length Of Zone 1
+            Start_Address2 = 0x20000;                               	// Start Address Of Zone 1
+            cmd_Length2 = 0x20000;                                  	// Length Of Zone 1
 
-            int NumOfFrames2 = cmd_Length2 / Frame_Len;             // Number Of Commands Of Zone 1 With The Lenght F1
-            int rest2 = cmd_Length1 % Frame_Len;                    // Length Of The Last Frame
-            int last_add2 = Start_Address2 + cmd_Length2 - rest2;   // Start Address Of The Last Frame
+            int NumOfFrames2 = cmd_Length2 / Frame_Len;             	// Number Of Commands Of Zone 1 With The Lenght F1
+            int rest2 = cmd_Length1 % Frame_Len;                    	// Length Of The Last Frame
+            int last_add2 = Start_Address2 + cmd_Length2 - rest2;   	// Start Address Of The Last Frame
 
             string[] cmd2 = new string[cmd_Length2];
             string[] Frames2 = new string[NumOfFrames2];

@@ -10,18 +10,12 @@ using System.Globalization;
 using System.Threading;
 
 namespace ProMap
-{
-    // In Class baraye etesal, ersal va daryefte command ba ECU haye CAN ijad shode
-    // Data estefade shode baraye sakht algorithme in tavabe dar file zir save shode
-    // EasyU2_Request_Response_Commands.xlsx
-    // EasyU2_Real_Data_CanEventSeries.txt
-    // EasyU2_Identification_CAN_Event.txt
-    // EasyU2_Identification_CAN.txt
-
+{    
     class CanECUs
     {
         public const string CanBudrate_3B = "06 04 13";//CanBaudrate_500k_B
 
+		// Initialize the IC for starting the connection procedure
         public static bool CAN_IC_Init(string Header_2B, string Mask_2B)
         {
             int M_1 = 0x10;
@@ -48,6 +42,7 @@ namespace ProMap
             return Logi;
         }
                
+		// Initialize the IC for CAN protocol
         public static bool CAN_Init()
         {
             string InitMsg;
@@ -63,7 +58,8 @@ namespace ProMap
 
             return result;
         }
-
+		
+		// Initialize the IC for CAN send and receive
         public static bool CAN_Init_MOB(int MOB, string Header_2B, string Mask_2B)
         {
             string InitMsg;
@@ -75,7 +71,7 @@ namespace ProMap
             System.Threading.Thread.Sleep(100);
         }
 
-        // in tabe baraye ersale command haye CAN ba tule kamtar az 8 ast
+        // Send standard CAN Data Commands
         public static bool CAN_Send(string Header_2B, string Command_8B)
         {
             Command_8B = Command_8B.Trim();
@@ -92,8 +88,7 @@ namespace ProMap
             return result;            
         }       
         
-        // in tabe, tabe e asli baraye ersale command haye CAN mibashad
-        // yani hame command haye bozorgtar ya kuchaktar az 8 byte
+        // Send CAN Data Commands Longer Than 8 Bytes
         public static bool CAN_Regular_Send(string Header2B, string Body)
         {
             int NumOfBytes = ((Body.Length + 1) / 3) - 1;
@@ -149,17 +144,8 @@ namespace ProMap
             return result;
         }
 
-        //This function reads the data from the buffer and extracts
-        //The header and the body of ECUs response and creates an standard command
-
-        // in tabe data ra az buffer mikhanad va header va body ra 
-        // az command ECU estekhraj mikonad va yek command standard misazad
-        // Example1: 
-        // input: 60 6D 11 07 E8 08 02 50 03 00 00 00 00 00
-        // output: 07 E0 08 02 50 03 00 00 00 00 00
-        // Example2: 
-        // input: 07 E8 61 92 41 32 43 39 60 6D 11 07 E8 08 21 39 36 36 34 37 30 30 6D 11 07 E8 08 22 30 31 20 20 20 55 55 6D 11 07 E8 08 23 01 02 03 04 05 55 55
-        // output: 07 E8 1B 61 92 41 32 43 39 39 36 36 34 37 30 30 30 31 20 20 20 55 55 01 02 03 04 05 55 55
+        //This Function Reads The Data From The Buffer And Extracts
+        //The Header And The Body Of ECUs Response And Creates An Standard Command        
         public static bool CAN_GetData(ref string ECUCommand)
         {
             string Data = "";
@@ -236,7 +222,8 @@ namespace ProMap
 
             return result;
         }
-
+		
+		// Takes The SoftRef Extracted From ECU's Response Command And Turns It Into String Of Characters
         public static string Can_SR_Normalize(string SR)
         {
             string SoftRef = "";
@@ -249,6 +236,7 @@ namespace ProMap
             return SoftRef;
         }
 
+		// Takes The BootRef Extracted From ECU's Response Command And Turns It Into String Of Characters
         public static string Can_BR_Normalize(string BR)
         {
             string Result = "";
@@ -261,6 +249,7 @@ namespace ProMap
             return Result;
         }
         
+		// Takes The Calibration Extracted From ECU's Response Command And Turns It Into String Of Characters
         public static string Can_CA_Normalize(string CA)
         {
             string Result = "";
@@ -273,6 +262,7 @@ namespace ProMap
             return Result;
         }
 
+		// Converts String Of 2 Characters (1 Hexadecimal Byte) Into A Character
         static public int Str2Hex(string Byte)
         {
             int Result = 0;

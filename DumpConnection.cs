@@ -6,13 +6,13 @@ using System.IO;
 
 namespace ProMap
 {
-    // This class is created for resding download data from .bin files in the Dump folder
-    // and save the commands in variables
+    // This Class Is Created For Reading Download Data From .bin Files In The Dump Folder
+    // And Save The Commands In Variables
     class DumpConnection
     {
-        // This method reads all the command from the .bin file and 
-        // returns all the command frames with the length 0xF0 except the last one
-        // which is shorter than 0xF0
+        // This Method Reads All The Command From The .bin File And 
+        // Returns All The Command Frames With The Length 0xF0 Except The Last One
+        // Which Is Shorter Than 0xF0
         public static string[] Read(int Add_Start, int Stream_Leng)
         {
             string[] cmd = new string[Stream_Leng];
@@ -25,10 +25,10 @@ namespace ProMap
                 cmd[i] = binReader.ReadByte().ToString("X2");
 
             binReader.Close();
-            return cmd; // cmd is a long command read from .bin file
+            return cmd; // cmd Is A Long Command Read From .bin File
         }
 
-        // It returns the last frame of the command with the length shorter than 0xF0
+        // It Returns The Last Fame Of The Command With The Length Shorter Than 0xF0
         public static string Last_Frame(int Last_Add, int Last_Leng)
         {
             string last_cmd = "";
@@ -45,7 +45,7 @@ namespace ProMap
             return last_cmd;
         }
 
-        // It returns the start address of the command of the 1st zone as an integer
+        // It Returns The Start Address Of The Command Of The 1st Zone As Aan Integer
         public static int Start_Address()
         {
             int Start_Address = 0;
@@ -63,13 +63,12 @@ namespace ProMap
             return Start_Address + 12;
         }
 
-        // It returns the end address of the command of the 1st zone as an integer
+        // It Returns The End Address Of The Command Of The 1st Zone As An Integer
         public static int End_Address()
         {
             int End_Address = 0;
 
             string DumpFileName = "./Dump/" + AutoDetection.BinFileName;
-            //BinaryReader binReader = new BinaryReader(File.Open(DumpFileName, FileMode.Open));
 
             byte[] allBytes = System.IO.File.ReadAllBytes(DumpFileName);
             string cmd = BitConverter.ToString(allBytes).Replace("-", "");
