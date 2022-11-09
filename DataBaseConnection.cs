@@ -12,17 +12,79 @@ namespace ProMap
 {
     class DataBaseConnection
     {
-        //                                                  ECUsSpecification Functions                                      
-        // FirstOrDefault() For ECUsSpecification Table
-        public static ECUsSpecification ES_FirstOrDefault(int DefaultID)
-        {
-            ECUsSpecification Record = new ECUsSpecification();
-            string connstr = ConfigurationManager.ConnectionStrings["ProMapAccessDB"].ConnectionString;
-            string Query = "";
+        private static String connstr1 = ConfigurationManager.ConnectionStrings["ProMapAccessDB"].ConnectionString;
+        private static String connstr2 = "Provider=Microsoft.Jet.OLEDB.4.0; Data Source = E:/User/work/Remap/source - Developing/ProMap 20190911(Ver 1)- Source/67 ProMap 991107 zarvan v5.2.0/ProMap/PromapDatabase.mdb";
+        private static String Query = "";
 
+        // FirstOrDefault
+        public static History FirstOrDefault(ref History H)
+        {
+            Query = "SELECT * FROM History;";
+
+            using (OleDbConnection con = new OleDbConnection(connstr1))
+            {
+                using (OleDbCommand cmd = new OleDbCommand(Query, con))
+                {
+                    con.Open();
+                    OleDbDataReader reader = cmd.ExecuteReader();
+                    while (reader.Read())
+                    {
+                        H.ID = int.Parse(reader["ID"].ToString());
+                        H.SpecificationID = int.Parse(reader["SpecificationID"].ToString());
+                    }
+                    con.Close();
+                }
+            }
+
+            return H;
+        }
+        public static AdvanceRemap FirstOrDefault(ref AdvanceRemap AR)
+        {
+            Query = "SELECT * FROM AdvanceRemap;";
+
+            using (OleDbConnection con = new OleDbConnection(connstr1))
+            {
+                using (OleDbCommand cmd = new OleDbCommand(Query, con))
+                {
+                    con.Open();
+                    OleDbDataReader reader = cmd.ExecuteReader();
+                    while (reader.Read())
+                    {
+                        AR.ID = int.Parse(reader["ID"].ToString());
+                        AR.Type = reader["Type"].ToString();
+                        AR.TableName = reader["TableName"].ToString();
+                        AR.RowsCount = reader["RowsCount"].ToString();
+                        AR.ColsCount = reader["ColsCount"].ToString();
+                        AR.X_Name = reader["X_Name"].ToString();
+                        AR.Y_Name = reader["Y_Name"].ToString();
+                        AR.X_Min = reader["X_Min"].ToString();
+                        AR.X_Max = reader["X_Max"].ToString();
+                        AR.Y_Min = reader["Y_Min"].ToString();
+                        AR.Y_Max = reader["Y_Max"].ToString();
+                        AR.Address_Start = reader["Address_Start"].ToString();
+                        AR.Address_End = reader["Address_End"].ToString();
+                        AR.DataSize = reader["DataSize"].ToString();
+                        AR.Type_Cryption = reader["Type_Cryption"].ToString();
+                        AR.TableName_Cryption = reader["TableName_Cryption"].ToString();
+                        AR.RowsCount_Cryption = reader["RowsCount_Cryption"].ToString();
+                        AR.ColsCount_Cryption = reader["ColsCount_Cryption"].ToString();
+                        AR.X_Name_Cryption = reader["X_Name_Cryption"].ToString();
+                        AR.Y_Name_Cryption = reader["Y_Name_Cryption"].ToString();
+                        AR.Address_Start_Cryption = reader["Address_Start_Cryption"].ToString();
+                        AR.Address_End_Cryption = reader["Address_End_Cryption"].ToString();
+                        AR.DataSize_Cryption = reader["DataSize_Cryption"].ToString();
+                    }
+                    con.Close();
+                }
+            }
+
+            return AR;
+        }
+        public static ECUsSpecification FirstOrDefault(ref ECUsSpecification ES, int DefaultID)
+        {
             Query = "SELECT * FROM ECUsSpecification WHERE ID = " + DefaultID.ToString() + ";";
 
-            using (OleDbConnection con = new OleDbConnection(connstr))
+            using (OleDbConnection con = new OleDbConnection(connstr1))
             {
                 using (OleDbCommand cmd = new OleDbCommand(Query, con))
                 {
@@ -30,41 +92,151 @@ namespace ProMap
                     OleDbDataReader reader = cmd.ExecuteReader();
                     while (reader.Read())
                     {
-                        Record.ID = int.Parse(reader["ID"].ToString());
-                        Record.Manufacturer = reader["Manufacturer"].ToString();
-                        Record.DeviceName = reader["DeviceName"].ToString();
-                        Record.Type = reader["Type"].ToString();
-                        Record.BootRef = reader["BootRef"].ToString();
-                        Record.SoftRef = reader["SoftRef"].ToString();
-                        Record.Calibration = reader["Calibration"].ToString();
-                        Record.BinFileName = reader["BinFileName"].ToString();
-                        Record.BaudRate = reader["BaudRate"].ToString();
-                        Record.CRC_Address = reader["CRC_Address"].ToString();
-                        Record.ConnectionID = int.Parse(reader["ConnectionID"].ToString());
-                        Record.Type1_AddressRemap = reader["Type1_AddressRemap"].ToString();
-                        Record.Type2_TableRemap = reader["Type2_TableRemap"].ToString();
-                        Record.ProductNumber = reader["ProductNumber"].ToString();
-                        Record.HardwareCode = reader["HardwareCode"].ToString();
-                        Record.Comment = reader["Comment"].ToString();
-                        Record.UserID = int.Parse(reader["UserID"].ToString());
-                        Record.type1Cryption = reader["type1Cryption"].ToString();
-                        Record.binCryption = reader["binCryption"].ToString();
-                        Record.crcCryption = reader["crcCryption"].ToString();
+                        ES.ID = int.Parse(reader["ID"].ToString());
+                        ES.Manufacturer = reader["Manufacturer"].ToString();
+                        ES.DeviceName = reader["DeviceName"].ToString();
+                        ES.Type = reader["Type"].ToString();
+                        ES.BootRef = reader["BootRef"].ToString();
+                        ES.SoftRef = reader["SoftRef"].ToString();
+                        ES.Calibration = reader["Calibration"].ToString();
+                        ES.BinFileName = reader["BinFileName"].ToString();
+                        ES.BaudRate = reader["BaudRate"].ToString();
+                        ES.CRC_Address = reader["CRC_Address"].ToString();
+                        ES.ConnectionID = int.Parse(reader["ConnectionID"].ToString());
+                        ES.Type1_AddressRemap = reader["Type1_AddressRemap"].ToString();
+                        ES.Type2_TableRemap = reader["Type2_TableRemap"].ToString();
+                        ES.ProductNumber = reader["ProductNumber"].ToString();
+                        ES.HardwareCode = reader["HardwareCode"].ToString();
+                        ES.Comment = reader["Comment"].ToString();
+                        ES.UserID = int.Parse(reader["UserID"].ToString());
+                        ES.type1Cryption = reader["type1Cryption"].ToString();
+                        ES.binCryption = reader["binCryption"].ToString();
+                        ES.crcCryption = reader["crcCryption"].ToString();
                     }
                     con.Close();
                 }
             }
-            return Record;
+            return ES;
         }
-        public static ECUsSpecification ES_FirstOrDefault(string DefaultBootRef)
+        public static ExistingEcu FirstOrDefault(ref ExistingEcu EE, int DefaultID)
         {
-            ECUsSpecification Record = new ECUsSpecification();
-            string connstr = ConfigurationManager.ConnectionStrings["ProMapAccessDB"].ConnectionString;
-            string Query = "";
+            Query = "SELECT * FROM ExistingEcus WHERE ID = " + DefaultID.ToString() + ";";
 
+            using (OleDbConnection con = new OleDbConnection(connstr1))
+            {
+                using (OleDbCommand cmd = new OleDbCommand(Query, con))
+                {
+                    con.Open();
+                    OleDbDataReader reader = cmd.ExecuteReader();
+                    while (reader.Read())
+                    {
+                        EE.ID = int.Parse(reader["ID"].ToString());
+                        EE.Specification_ID = int.Parse(reader["Specification_ID"].ToString());
+                        EE.Connection_ID = int.Parse(reader["ConnectionID"].ToString());
+                        EE.FileName = reader["FileName"].ToString();
+                        EE.Comment = reader["Comment"].ToString();
+                    }
+                    con.Close();
+                }
+            }
+
+            return EE;
+        }
+        public static DefaultLanguage FirstOrDefault(ref DefaultLanguage DL, int DefaultID)
+        {
+            Query = "SELECT * FROM DefaultLanguage WHERE ID = " + DefaultID.ToString() + ";";
+
+            using (OleDbConnection con = new OleDbConnection(connstr1))
+            {
+                using (OleDbCommand cmd = new OleDbCommand(Query, con))
+                {
+                    con.Open();
+                    OleDbDataReader reader = cmd.ExecuteReader();
+                    while (reader.Read())
+                    {
+                        DL.ID = int.Parse(reader["ID"].ToString());
+                        DL.lang = reader["lang"].ToString();
+                    }
+                    con.Close();
+                }
+            }
+
+            return DL;
+        }
+        public static History FirstOrDefault(ref History H, int DefaultID)
+        {
+            Query = "SELECT * FROM History WHERE ID = " + DefaultID.ToString() + ";";
+
+            using (OleDbConnection con = new OleDbConnection(connstr1))
+            {
+                using (OleDbCommand cmd = new OleDbCommand(Query, con))
+                {
+                    con.Open();
+                    OleDbDataReader reader = cmd.ExecuteReader();
+                    while (reader.Read())
+                    {
+                        H.ID = int.Parse(reader["ID"].ToString());
+                        H.SpecificationID = int.Parse(reader["SpecificationID"].ToString());
+                    }
+                    con.Close();
+                }
+            }
+
+            return H;
+        }
+        public static Connection FirstOrDefault(ref Connection C, int DefaultID)
+        {
+            Query = "SELECT * FROM Connection WHERE ID = " + DefaultID.ToString() + ";";
+
+            using (OleDbConnection con = new OleDbConnection(connstr1))
+            {
+                using (OleDbCommand cmd = new OleDbCommand(Query, con))
+                {
+                    con.Open();
+                    OleDbDataReader reader = cmd.ExecuteReader();
+                    while (reader.Read())
+                    {
+                        C.ID = int.Parse(reader["ID"].ToString());
+                        C.Protocols_ID = int.Parse(reader["Protocols_ID"].ToString());
+                        C.Pin = int.Parse(reader["Pin"].ToString());
+                        C.Baudrate = int.Parse(reader["Baudrate"].ToString());
+                        C.Header = reader["Header"].ToString();
+                        C.Start_Command = reader["Start_Command"].ToString();
+                        C.End_Command = reader["End_Command"].ToString();
+                        C.Itteration_Command = reader["Itteration_Command"].ToString();
+                    }
+                    con.Close();
+                }
+            }
+
+            return C;
+        }
+        public static Protocol FirstOrDefault(ref Protocol P, int DefaultID)
+        {
+            Query = "SELECT * FROM Protocols WHERE ID = " + DefaultID.ToString() + ";";
+
+            using (OleDbConnection con = new OleDbConnection(connstr1))
+            {
+                using (OleDbCommand cmd = new OleDbCommand(Query, con))
+                {
+                    con.Open();
+                    OleDbDataReader reader = cmd.ExecuteReader();
+                    while (reader.Read())
+                    {
+                        P.ID = int.Parse(reader["ID"].ToString());
+                        P.Name = reader["Protocol Name"].ToString();
+                    }
+                    con.Close();
+                }
+            }
+
+            return P;
+        }
+        public static ECUsSpecification FirstOrDefault(ref ECUsSpecification ES, String DefaultBootRef)
+        {
             Query = "SELECT * FROM ECUsSpecification WHERE BootRef = '" + DefaultBootRef + "';";
 
-            using (OleDbConnection con = new OleDbConnection(connstr))
+            using (OleDbConnection con = new OleDbConnection(connstr1))
             {
                 using (OleDbCommand cmd = new OleDbCommand(Query, con))
                 {
@@ -72,41 +244,38 @@ namespace ProMap
                     OleDbDataReader reader = cmd.ExecuteReader();
                     while (reader.Read())
                     {
-                        Record.ID = int.Parse(reader["ID"].ToString());
-                        Record.Manufacturer = reader["Manufacturer"].ToString();
-                        Record.DeviceName = reader["DeviceName"].ToString();
-                        Record.Type = reader["Type"].ToString();
-                        Record.BootRef = reader["BootRef"].ToString();
-                        Record.SoftRef = reader["SoftRef"].ToString();
-                        Record.Calibration = reader["Calibration"].ToString();
-                        Record.BinFileName = reader["BinFileName"].ToString();
-                        Record.BaudRate = reader["BaudRate"].ToString();
-                        Record.CRC_Address = reader["CRC_Address"].ToString();
-                        Record.ConnectionID = int.Parse(reader["ConnectionID"].ToString());
-                        Record.Type1_AddressRemap = reader["Type1_AddressRemap"].ToString();
-                        Record.Type2_TableRemap = reader["Type2_TableRemap"].ToString();
-                        Record.ProductNumber = reader["ProductNumber"].ToString();
-                        Record.HardwareCode = reader["HardwareCode"].ToString();
-                        Record.Comment = reader["Comment"].ToString();
-                        Record.UserID = int.Parse(reader["UserID"].ToString());
-                        Record.type1Cryption = reader["type1Cryption"].ToString();
-                        Record.binCryption = reader["binCryption"].ToString();
-                        Record.crcCryption = reader["crcCryption"].ToString();
+                        ES.ID = int.Parse(reader["ID"].ToString());
+                        ES.Manufacturer = reader["Manufacturer"].ToString();
+                        ES.DeviceName = reader["DeviceName"].ToString();
+                        ES.Type = reader["Type"].ToString();
+                        ES.BootRef = reader["BootRef"].ToString();
+                        ES.SoftRef = reader["SoftRef"].ToString();
+                        ES.Calibration = reader["Calibration"].ToString();
+                        ES.BinFileName = reader["BinFileName"].ToString();
+                        ES.BaudRate = reader["BaudRate"].ToString();
+                        ES.CRC_Address = reader["CRC_Address"].ToString();
+                        ES.ConnectionID = int.Parse(reader["ConnectionID"].ToString());
+                        ES.Type1_AddressRemap = reader["Type1_AddressRemap"].ToString();
+                        ES.Type2_TableRemap = reader["Type2_TableRemap"].ToString();
+                        ES.ProductNumber = reader["ProductNumber"].ToString();
+                        ES.HardwareCode = reader["HardwareCode"].ToString();
+                        ES.Comment = reader["Comment"].ToString();
+                        ES.UserID = int.Parse(reader["UserID"].ToString());
+                        ES.type1Cryption = reader["type1Cryption"].ToString();
+                        ES.binCryption = reader["binCryption"].ToString();
+                        ES.crcCryption = reader["crcCryption"].ToString();
                     }
                     con.Close();
                 }
             }
-            return Record;
-        }
-        public static ECUsSpecification ES_FirstOrDefault(string Col1, string ColVal1, string Col2, string ColVal2, string Col3, string ColVal3, string Col4, string ColVal4, string Col5, string ColVal5, string Col6, string ColVal6)
-        {
-            ECUsSpecification Record = new ECUsSpecification();
-            string connstr = ConfigurationManager.ConnectionStrings["ProMapAccessDB"].ConnectionString;
-            string Query = "";
 
+            return ES;
+        }
+        public static ECUsSpecification FirstOrDefault(ref ECUsSpecification ES, String Col1, String ColVal1, String Col2, String ColVal2, String Col3, String ColVal3, String Col4, String ColVal4, String Col5, String ColVal5, String Col6, String ColVal6)
+        {
             Query = "SELECT * FROM ECUsSpecification WHERE " + Col1 + " = '" + ColVal1 + "' OR" + Col2 + " = '" + ColVal2 + "' OR" + Col3 + " = '" + ColVal3 + "' OR" + Col4 + " = '" + ColVal4 + "' OR" + Col5 + " = '" + ColVal5 + "' OR" + Col6 + " = '" + ColVal6 + "' OR 1=1;";
 
-            using (OleDbConnection con = new OleDbConnection(connstr))
+            using (OleDbConnection con = new OleDbConnection(connstr1))
             {
                 using (OleDbCommand cmd = new OleDbCommand(Query, con))
                 {
@@ -114,468 +283,63 @@ namespace ProMap
                     OleDbDataReader reader = cmd.ExecuteReader();
                     while (reader.Read())
                     {
-                        Record.ID = int.Parse(reader["ID"].ToString());
-                        Record.Manufacturer = reader["Manufacturer"].ToString();
-                        Record.DeviceName = reader["DeviceName"].ToString();
-                        Record.Type = reader["Type"].ToString();
-                        Record.BootRef = reader["BootRef"].ToString();
-                        Record.SoftRef = reader["SoftRef"].ToString();
-                        Record.Calibration = reader["Calibration"].ToString();
-                        Record.BinFileName = reader["BinFileName"].ToString();
-                        Record.BaudRate = reader["BaudRate"].ToString();
-                        Record.CRC_Address = reader["CRC_Address"].ToString();
-                        Record.ConnectionID = int.Parse(reader["ConnectionID"].ToString());
-                        Record.Type1_AddressRemap = reader["Type1_AddressRemap"].ToString();
-                        Record.Type2_TableRemap = reader["Type2_TableRemap"].ToString();
-                        Record.ProductNumber = reader["ProductNumber"].ToString();
-                        Record.HardwareCode = reader["HardwareCode"].ToString();
-                        Record.Comment = reader["Comment"].ToString();
-                        Record.UserID = int.Parse(reader["UserID"].ToString());
-                        Record.type1Cryption = reader["type1Cryption"].ToString();
-                        Record.binCryption = reader["binCryption"].ToString();
-                        Record.crcCryption = reader["crcCryption"].ToString();
+                        ES.ID = int.Parse(reader["ID"].ToString());
+                        ES.Manufacturer = reader["Manufacturer"].ToString();
+                        ES.DeviceName = reader["DeviceName"].ToString();
+                        ES.Type = reader["Type"].ToString();
+                        ES.BootRef = reader["BootRef"].ToString();
+                        ES.SoftRef = reader["SoftRef"].ToString();
+                        ES.Calibration = reader["Calibration"].ToString();
+                        ES.BinFileName = reader["BinFileName"].ToString();
+                        ES.BaudRate = reader["BaudRate"].ToString();
+                        ES.CRC_Address = reader["CRC_Address"].ToString();
+                        ES.ConnectionID = int.Parse(reader["ConnectionID"].ToString());
+                        ES.Type1_AddressRemap = reader["Type1_AddressRemap"].ToString();
+                        ES.Type2_TableRemap = reader["Type2_TableRemap"].ToString();
+                        ES.ProductNumber = reader["ProductNumber"].ToString();
+                        ES.HardwareCode = reader["HardwareCode"].ToString();
+                        ES.Comment = reader["Comment"].ToString();
+                        ES.UserID = int.Parse(reader["UserID"].ToString());
+                        ES.type1Cryption = reader["type1Cryption"].ToString();
+                        ES.binCryption = reader["binCryption"].ToString();
+                        ES.crcCryption = reader["crcCryption"].ToString();
                     }
                     con.Close();
                 }
             }
-            return Record;
+
+            return ES;
         }
 
-        // Get Data From ECUsSpecification Table Where The Coloumn
-        // Contains A Specific Value
-        public static ECUsSpecification ES_Contains(string Col, string ColValue)
+        // Delete
+        public static bool DeleteFromTable(String tbName, int DeleteID)
         {
-            ECUsSpecification Record = new ECUsSpecification();
-            string connstr = ConfigurationManager.ConnectionStrings["ProMapAccessDB"].ConnectionString;
+            bool isDeleted = false;
+            OleDbConnection dbcon = new OleDbConnection(connstr2);
 
-            using (OleDbConnection con = new OleDbConnection(connstr))
+            try
             {
-                using (OleDbCommand cmd = new OleDbCommand("SELECT * FROM ECUsSpecification WHERE " + Col + " = '" + ColValue + "';", con))
-                {
-                    con.Open();
-                    OleDbDataReader reader = cmd.ExecuteReader();
-                    while (reader.Read())
-                    {
-                        Record.ID = int.Parse(reader["ID"].ToString());
-                        Record.Manufacturer = reader["Manufacturer"].ToString();
-                        Record.DeviceName = reader["DeviceName"].ToString();
-                        Record.Type = reader["Type"].ToString();
-                        Record.BootRef = reader["BootRef"].ToString();
-                        Record.SoftRef = reader["SoftRef"].ToString();
-                        Record.Calibration = reader["Calibration"].ToString();
-                        Record.BinFileName = reader["BinFileName"].ToString();
-                        Record.BaudRate = reader["BaudRate"].ToString();
-                        Record.CRC_Address = reader["CRC_Address"].ToString();
-                        Record.ConnectionID = int.Parse(reader["ConnectionID"].ToString());
-                        Record.Type1_AddressRemap = reader["Type1_AddressRemap"].ToString();
-                        Record.Type2_TableRemap = reader["Type2_TableRemap"].ToString();
-                        Record.ProductNumber = reader["ProductNumber"].ToString();
-                        Record.HardwareCode = reader["HardwareCode"].ToString();
-                        Record.Comment = reader["Comment"].ToString();
-                        Record.UserID = int.Parse(reader["UserID"].ToString());
-                        Record.type1Cryption = reader["type1Cryption"].ToString();
-                        Record.type2Cryption = reader["type2Cryption"].ToString();
-                        Record.binCryption = reader["binCryption"].ToString();
-                        Record.crcCryption = reader["crcCryption"].ToString();
-                    }
-                    con.Close();
-                }
+                OleDbCommand cmd = dbcon.CreateCommand();
+                dbcon.Open();
+                cmd.CommandText = "DELETE FROM " + tbName + " WHERE ID = " + DeleteID.ToString();
+                cmd.Connection = dbcon;
+                cmd.ExecuteNonQuery();
+                dbcon.Close();
+                isDeleted = true;
             }
-            return Record;
-        }
-        public static ECUsSpecification ES_Contains(string Col, string ColValue, int DefaultID)
-        {
-            ECUsSpecification Record = new ECUsSpecification();
-            string connstr = ConfigurationManager.ConnectionStrings["ProMapAccessDB"].ConnectionString;
-
-            using (OleDbConnection con = new OleDbConnection(connstr))
+            catch (Exception ex)
             {
-                using (OleDbCommand cmd = new OleDbCommand("SELECT * FROM ECUsSpecification WHERE " + Col + " = '" + ColValue + "' AND ID = " + DefaultID.ToString() + ";", con))
-                {
-                    con.Open();
-                    OleDbDataReader reader = cmd.ExecuteReader();
-                    while (reader.Read())
-                    {
-                        Record.ID = int.Parse(reader["ID"].ToString());
-                        Record.Manufacturer = reader["Manufacturer"].ToString();
-                        Record.DeviceName = reader["DeviceName"].ToString();
-                        Record.Type = reader["Type"].ToString();
-                        Record.BootRef = reader["BootRef"].ToString();
-                        Record.SoftRef = reader["SoftRef"].ToString();
-                        Record.Calibration = reader["Calibration"].ToString();
-                        Record.BinFileName = reader["BinFileName"].ToString();
-                        Record.BaudRate = reader["BaudRate"].ToString();
-                        Record.CRC_Address = reader["CRC_Address"].ToString();
-                        Record.ConnectionID = int.Parse(reader["ConnectionID"].ToString());
-                        Record.Type1_AddressRemap = reader["Type1_AddressRemap"].ToString();
-                        Record.Type2_TableRemap = reader["Type2_TableRemap"].ToString();
-                        Record.ProductNumber = reader["ProductNumber"].ToString();
-                        Record.HardwareCode = reader["HardwareCode"].ToString();
-                        Record.Comment = reader["Comment"].ToString();
-                        Record.UserID = int.Parse(reader["UserID"].ToString());
-                        Record.type1Cryption = reader["type1Cryption"].ToString();
-                        Record.type2Cryption = reader["type2Cryption"].ToString();
-                        Record.binCryption = reader["binCryption"].ToString();
-                        Record.crcCryption = reader["crcCryption"].ToString();
-                    }
-                    con.Close();
-                }
-            }
-            return Record;
-        }
-
-        // Count The Number Of Records In ECUsSpecification Table
-        public static int CountInECUsSpecification(int CountID)
-        {
-            string connstr = ConfigurationManager.ConnectionStrings["ProMapAccessDB"].ConnectionString;
-            int NumberOfECUs = 0;
-
-            using (OleDbConnection con = new OleDbConnection(connstr))
-            {
-                using (OleDbCommand cmd = new OleDbCommand("SELECT COUNT(*) AS NumberOfECUs FROM ECUsSpecification WHERE ID = " + CountID.ToString() + "';", con))
-                {
-                    con.Open();
-                    NumberOfECUs = (int)cmd.ExecuteScalar();
-                    con.Close();
-                }
+                MessageBox.Show("Insert Error:" + ex.Message);
             }
 
-            return NumberOfECUs;
-        }
-        public static int CountInECUsSpecification(string Col, string ColValue)
-        {
-            string connstr = ConfigurationManager.ConnectionStrings["ProMapAccessDB"].ConnectionString;
-            int NumberOfECUs = 0;
-
-            using (OleDbConnection con = new OleDbConnection(connstr))
-            {
-                using (OleDbCommand cmd = new OleDbCommand("SELECT COUNT(*) AS NumberOfECUs FROM ECUsSpecification WHERE " + Col + " = '" + ColValue + "';", con))
-                {
-                    con.Open();
-                    NumberOfECUs = (int)cmd.ExecuteScalar();
-                    con.Close();
-                }
-            }
-
-            return NumberOfECUs;
-        }
-        public static int CountInECUsSpecification(string Col, int Leng, int id)
-        {
-            string connstr = ConfigurationManager.ConnectionStrings["ProMapAccessDB"].ConnectionString;
-            int NumberOfECUs = 0;
-
-            using (OleDbConnection con = new OleDbConnection(connstr))
-            {
-                using (OleDbCommand cmd = new OleDbCommand("SELECT COUNT(*) AS NumberOfECUs FROM ECUsSpecification WHERE ID = " + id.ToString() + "AND LEN(" + Col + ") > " + Leng.ToString() + ";", con))
-                {
-                    con.Open();
-                    NumberOfECUs = (int)cmd.ExecuteScalar();
-                    con.Close();
-                }
-            }
-
-            return NumberOfECUs;
-        }
-        public static int CountInECUsSpecification(string Col, int Leng, int id1, int id2)
-        {
-            string connstr = ConfigurationManager.ConnectionStrings["ProMapAccessDB"].ConnectionString;
-            int NumberOfECUs = 0;
-            string Query = "SELECT COUNT(*) AS NumberOfECUs FROM ECUsSpecification WHERE (ID = " + id1.ToString() + " OR ID = " + id2.ToString() + ") AND Len(" + Col + ") > " + Leng.ToString() + " AS ColLen;";
-
-            using (OleDbConnection con = new OleDbConnection(connstr))
-            {
-                using (OleDbCommand cmd = new OleDbCommand(Query, con))
-                {
-                    con.Open();
-                    NumberOfECUs = (int)cmd.ExecuteScalar();
-                    con.Close();
-                }
-            }
-
-            return NumberOfECUs;
-        }
-        public static int CountInECUsSpecification(int id1, int id2, int id3, int id4)
-        {
-            string connstr = ConfigurationManager.ConnectionStrings["ProMapAccessDB"].ConnectionString;
-            int NumberOfECUs = 0;
-            string Query = "SELECT COUNT(*) AS NumberOfECUs FROM ECUsSpecification WHERE ID = " + id1.ToString() + " OR ID = " + id2.ToString() + " OR ID = " + id3.ToString() + " OR ID = " + id4.ToString() + ";";
-
-            using (OleDbConnection con = new OleDbConnection(connstr))
-            {
-                using (OleDbCommand cmd = new OleDbCommand(Query, con))
-                {
-                    con.Open();
-                    NumberOfECUs = (int)cmd.ExecuteScalar();
-                    con.Close();
-                }
-            }
-
-            return NumberOfECUs;
-        }
-        public static int CountInECUsSpecification(string ColCont1, string Cont1, string ColCont2, string Cont2, string ColLeng, int Leng)
-        {
-            string connstr = ConfigurationManager.ConnectionStrings["ProMapAccessDB"].ConnectionString;
-            int NumberOfECUs = 0;
-            string Query = "SELECT COUNT(*) AS NumberOfECUs FROM ECUsSpecification WHERE InStr(" + ColCont1 + ",'" + Cont1 + "') AND InStr(" + ColCont2 + ",'" + Cont2 + "') AND LEN(" + ColLeng + ") >" + Leng.ToString() + ";";
-
-            using (OleDbConnection con = new OleDbConnection(connstr))
-            {
-                using (OleDbCommand cmd = new OleDbCommand(Query, con))
-                {
-                    con.Open();
-                    NumberOfECUs = (int)cmd.ExecuteScalar();
-                    con.Close();
-                }
-            }
-
-            return NumberOfECUs;
-        }
-        public static int CountInECUsSpecification(string Col, Dictionary<int, string> SearchList)
-        {
-            string connstr = ConfigurationManager.ConnectionStrings["ProMapAccessDB"].ConnectionString;
-            int NumberOfECUs = 0;
-            int Leng = SearchList.Count;
-
-            using (OleDbConnection con = new OleDbConnection(connstr))
-            {
-                for (int i = 0; i < Leng; i++)
-                {
-                    string Query = "SELECT COUNT(*) AS NumberOfECUs FROM ECUsSpecification WHERE " + Col + " = " + SearchList[i].ToString() + ";";
-                    using (OleDbCommand cmd = new OleDbCommand(Query, con))
-                    {
-                        con.Open();
-                        NumberOfECUs = (int)cmd.ExecuteScalar();
-                        con.Close();
-                    }
-                }
-            }
-
-            return NumberOfECUs;
+            return isDeleted;
         }
 
-        // Get Data From ECUsSpecification Table In A Specific Condition
-        public static ECUsSpecification GetDataFromECUsSpecification(string Col, int Leng, int id)
-        {
-            string connstr = ConfigurationManager.ConnectionStrings["ProMapAccessDB"].ConnectionString;
-            string query = "";
-            ECUsSpecification Record = new ECUsSpecification();
-
-            using (OleDbConnection con = new OleDbConnection(connstr))
-            {
-                query = "SELECT * FROM ECUsSpecification WHERE ID = " + id.ToString() + " AND Len(" + Col + ") >" + Leng.ToString() + ";";
-                using (OleDbCommand cmd = new OleDbCommand(query, con))
-                {
-                    con.Open();
-                    OleDbDataReader reader = cmd.ExecuteReader();
-                    while (reader.Read())
-                    {
-                        Record.ID = int.Parse(reader["ID"].ToString());
-                        Record.Manufacturer = reader["Manufacturer"].ToString();
-                        Record.DeviceName = reader["DeviceName"].ToString();
-                        Record.Type = reader["Type"].ToString();
-                        Record.BootRef = reader["BootRef"].ToString();
-                        Record.SoftRef = reader["SoftRef"].ToString();
-                        Record.Calibration = reader["Calibration"].ToString();
-                        Record.BinFileName = reader["BinFileName"].ToString();
-                        Record.BaudRate = reader["BaudRate"].ToString();
-                        Record.CRC_Address = reader["CRC_Address"].ToString();
-                        Record.ConnectionID = int.Parse(reader["ConnectionID"].ToString());
-                        Record.Type1_AddressRemap = reader["Type1_AddressRemap"].ToString();
-                        Record.Type2_TableRemap = reader["Type2_TableRemap"].ToString();
-                        Record.ProductNumber = reader["ProductNumber"].ToString();
-                        Record.HardwareCode = reader["HardwareCode"].ToString();
-                        Record.Comment = reader["Comment"].ToString();
-                        Record.UserID = int.Parse(reader["UserID"].ToString());
-                        Record.type1Cryption = reader["type1Cryption"].ToString();
-                        Record.binCryption = reader["binCryption"].ToString();
-                        Record.crcCryption = reader["crcCryption"].ToString();
-                    }
-                    con.Close();
-                }
-
-            }
-            return Record;
-        }
-        public static ECUsSpecification GetDataFromECUsSpecification(string Col, int Leng, int id1, int id2)
-        {
-            string connstr = ConfigurationManager.ConnectionStrings["ProMapAccessDB"].ConnectionString;
-            string query = "";
-            ECUsSpecification Record = new ECUsSpecification();
-
-            using (OleDbConnection con = new OleDbConnection(connstr))
-            {
-                query = "SELECT * FROM ECUsSpecification WHERE (ID = " + id1.ToString() + " OR ID = " + id2.ToString() + ") AND Len(" + Col + ") > " + Leng.ToString() + ";";
-                using (OleDbCommand cmd = new OleDbCommand(query, con))
-                {
-                    con.Open();
-                    OleDbDataReader reader = cmd.ExecuteReader();
-                    while (reader.Read())
-                    {
-                        Record.ID = int.Parse(reader["ID"].ToString());
-                        Record.Manufacturer = reader["Manufacturer"].ToString();
-                        Record.DeviceName = reader["DeviceName"].ToString();
-                        Record.Type = reader["Type"].ToString();
-                        Record.BootRef = reader["BootRef"].ToString();
-                        Record.SoftRef = reader["SoftRef"].ToString();
-                        Record.Calibration = reader["Calibration"].ToString();
-                        Record.BinFileName = reader["BinFileName"].ToString();
-                        Record.BaudRate = reader["BaudRate"].ToString();
-                        Record.CRC_Address = reader["CRC_Address"].ToString();
-                        Record.ConnectionID = int.Parse(reader["ConnectionID"].ToString());
-                        Record.Type1_AddressRemap = reader["Type1_AddressRemap"].ToString();
-                        Record.Type2_TableRemap = reader["Type2_TableRemap"].ToString();
-                        Record.ProductNumber = reader["ProductNumber"].ToString();
-                        Record.HardwareCode = reader["HardwareCode"].ToString();
-                        Record.Comment = reader["Comment"].ToString();
-                        Record.UserID = int.Parse(reader["UserID"].ToString());
-                        Record.type1Cryption = reader["type1Cryption"].ToString();
-                        Record.binCryption = reader["binCryption"].ToString();
-                        Record.crcCryption = reader["crcCryption"].ToString();
-                    }
-                    con.Close();
-                }
-
-            }
-            return Record;
-        }
-        public static ECUsSpecification GetDataFromECUsSpecification(int id1, int id2, int id3, int id4)
-        {
-            string connstr = ConfigurationManager.ConnectionStrings["ProMapAccessDB"].ConnectionString;
-            string query = "";
-            ECUsSpecification Record = new ECUsSpecification();
-
-            using (OleDbConnection con = new OleDbConnection(connstr))
-            {
-                query = "SELECT * FROM ECUsSpecification WHERE ID = " + id1.ToString() + " OR ID = " + id2.ToString() + " OR ID = " + id3.ToString() + " OR ID = " + id4.ToString() + ";";
-                using (OleDbCommand cmd = new OleDbCommand(query, con))
-                {
-                    con.Open();
-                    OleDbDataReader reader = cmd.ExecuteReader();
-                    while (reader.Read())
-                    {
-                        Record.ID = int.Parse(reader["ID"].ToString());
-                        Record.Manufacturer = reader["Manufacturer"].ToString();
-                        Record.DeviceName = reader["DeviceName"].ToString();
-                        Record.Type = reader["Type"].ToString();
-                        Record.BootRef = reader["BootRef"].ToString();
-                        Record.SoftRef = reader["SoftRef"].ToString();
-                        Record.Calibration = reader["Calibration"].ToString();
-                        Record.BinFileName = reader["BinFileName"].ToString();
-                        Record.BaudRate = reader["BaudRate"].ToString();
-                        Record.CRC_Address = reader["CRC_Address"].ToString();
-                        Record.ConnectionID = int.Parse(reader["ConnectionID"].ToString());
-                        Record.Type1_AddressRemap = reader["Type1_AddressRemap"].ToString();
-                        Record.Type2_TableRemap = reader["Type2_TableRemap"].ToString();
-                        Record.ProductNumber = reader["ProductNumber"].ToString();
-                        Record.HardwareCode = reader["HardwareCode"].ToString();
-                        Record.Comment = reader["Comment"].ToString();
-                        Record.UserID = int.Parse(reader["UserID"].ToString());
-                        Record.type1Cryption = reader["type1Cryption"].ToString();
-                        Record.binCryption = reader["binCryption"].ToString();
-                        Record.crcCryption = reader["crcCryption"].ToString();
-                    }
-                    con.Close();
-                }
-
-            }
-            return Record;
-        }
-        public static ECUsSpecification GetDataFromECUsSpecification(string ColCont1, string Cont1, string ColCont2, string Cont2, string ColLeng, int Leng)
-        {
-            string connstr = ConfigurationManager.ConnectionStrings["ProMapAccessDB"].ConnectionString;
-            string Query = "";
-            ECUsSpecification Record = new ECUsSpecification();
-
-            using (OleDbConnection con = new OleDbConnection(connstr))
-            {
-                Query = "SELECT * FROM ECUsSpecification WHERE InStr(" + ColCont1 + ",'" + Cont1 + "') AND InStr(" + ColCont2 + ",'" + Cont2 + "') AND LEN(" + ColLeng + ") >" + Leng.ToString() + ";";
-                using (OleDbCommand cmd = new OleDbCommand(Query, con))
-                {
-                    con.Open();
-                    OleDbDataReader reader = cmd.ExecuteReader();
-                    while (reader.Read())
-                    {
-                        Record.ID = int.Parse(reader["ID"].ToString());
-                        Record.Manufacturer = reader["Manufacturer"].ToString();
-                        Record.DeviceName = reader["DeviceName"].ToString();
-                        Record.Type = reader["Type"].ToString();
-                        Record.BootRef = reader["BootRef"].ToString();
-                        Record.SoftRef = reader["SoftRef"].ToString();
-                        Record.Calibration = reader["Calibration"].ToString();
-                        Record.BinFileName = reader["BinFileName"].ToString();
-                        Record.BaudRate = reader["BaudRate"].ToString();
-                        Record.CRC_Address = reader["CRC_Address"].ToString();
-                        Record.ConnectionID = int.Parse(reader["ConnectionID"].ToString());
-                        Record.Type1_AddressRemap = reader["Type1_AddressRemap"].ToString();
-                        Record.Type2_TableRemap = reader["Type2_TableRemap"].ToString();
-                        Record.ProductNumber = reader["ProductNumber"].ToString();
-                        Record.HardwareCode = reader["HardwareCode"].ToString();
-                        Record.Comment = reader["Comment"].ToString();
-                        Record.UserID = int.Parse(reader["UserID"].ToString());
-                        Record.type1Cryption = reader["type1Cryption"].ToString();
-                        Record.binCryption = reader["binCryption"].ToString();
-                        Record.crcCryption = reader["crcCryption"].ToString();
-                    }
-                    con.Close();
-                }
-
-            }
-            return Record;
-        }
-        public static ECUsSpecification GetDataFromECUsSpecification(string Col, Dictionary<int,string> SearchList)
-        {
-            string connstr = ConfigurationManager.ConnectionStrings["ProMapAccessDB"].ConnectionString;
-            string Query = "";
-            ECUsSpecification Record = new ECUsSpecification();
-            int Leng = SearchList.Count();
-
-            using (OleDbConnection con = new OleDbConnection(connstr))
-            {
-                for (int i = 0; i < Leng; i++)
-                {
-                    Query = "SELECT * FROM ECUsSpecification WHERE " + Col + " = " + SearchList[i].ToString() + ";";
-                    using (OleDbCommand cmd = new OleDbCommand(Query, con))
-                    {
-                        con.Open();
-                        OleDbDataReader reader = cmd.ExecuteReader();
-                        while (reader.Read())
-                        {
-                            Record.ID = int.Parse(reader["ID"].ToString());
-                            Record.Manufacturer = reader["Manufacturer"].ToString();
-                            Record.DeviceName = reader["DeviceName"].ToString();
-                            Record.Type = reader["Type"].ToString();
-                            Record.BootRef = reader["BootRef"].ToString();
-                            Record.SoftRef = reader["SoftRef"].ToString();
-                            Record.Calibration = reader["Calibration"].ToString();
-                            Record.BinFileName = reader["BinFileName"].ToString();
-                            Record.BaudRate = reader["BaudRate"].ToString();
-                            Record.CRC_Address = reader["CRC_Address"].ToString();
-                            Record.ConnectionID = int.Parse(reader["ConnectionID"].ToString());
-                            Record.Type1_AddressRemap = reader["Type1_AddressRemap"].ToString();
-                            Record.Type2_TableRemap = reader["Type2_TableRemap"].ToString();
-                            Record.ProductNumber = reader["ProductNumber"].ToString();
-                            Record.HardwareCode = reader["HardwareCode"].ToString();
-                            Record.Comment = reader["Comment"].ToString();
-                            Record.UserID = int.Parse(reader["UserID"].ToString());
-                            Record.type1Cryption = reader["type1Cryption"].ToString();
-                            Record.binCryption = reader["binCryption"].ToString();
-                            Record.crcCryption = reader["crcCryption"].ToString();
-                        }
-                        con.Close();
-                    }
-                }
-                
-
-            }
-            return Record;
-        }
-
-        // Update ECUsSpecification Table
-        public static bool UpdateECUsSpecification(ECUsSpecification New_Value)
+        // Update
+        public static bool UpdateTable(ECUsSpecification New_Value)
         {
             bool isUpdated = false;
-            string constr = "Provider=Microsoft.Jet.OLEDB.4.0; Data Source = E:/User/work/Remap/source - Developing/ProMap 20190911(Ver 1)- Source/67 ProMap 991107 zarvan v5.2.0/ProMap/PromapDatabase.mdb";
-            OleDbConnection dbcon = new OleDbConnection(constr);
+            OleDbConnection dbcon = new OleDbConnection(connstr2);
 
             try
             {
@@ -615,203 +379,10 @@ namespace ProMap
 
             return isUpdated;
         }
-
-        // Delete Item From ECUsSpecification Table
-        public static bool DeleteFromECUsSpecification(int DeleteID)
-        {
-            bool isDeleted = false;
-            string constr = "Provider=Microsoft.Jet.OLEDB.4.0; Data Source = E:/User/work/Remap/source - Developing/ProMap 20190911(Ver 1)- Source/67 ProMap 991107 zarvan v5.2.0/ProMap/PromapDatabase.mdb";
-            OleDbConnection dbcon = new OleDbConnection(constr);
-
-            try
-            {
-                OleDbCommand cmd = dbcon.CreateCommand();
-                dbcon.Open();
-                cmd.CommandText = "DELETE FROM ECUsSpecification WHERE ID = " + DeleteID.ToString();
-                cmd.Connection = dbcon;
-                cmd.ExecuteNonQuery();
-                dbcon.Close();
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("Insert Error:" + ex.Message);
-            }
-            return isDeleted;
-        }
-
-
-        //                                                  AdvanceRemap Functions                                           
-        // FirstOrDefault() For AdvanceRemap Table
-        public static AdvanceRemap AR_FirstOrDefault()
-        {
-            AdvanceRemap Record = new AdvanceRemap();
-            string connstr = ConfigurationManager.ConnectionStrings["ProMapAccessDB"].ConnectionString;
-            string Query = "";
-
-            Query = "SELECT * FROM AdvanceRemap;";
-
-            using (OleDbConnection con = new OleDbConnection(connstr))
-            {
-                using (OleDbCommand cmd = new OleDbCommand(Query, con))
-                {
-                    con.Open();
-                    OleDbDataReader reader = cmd.ExecuteReader();
-                    while (reader.Read())
-                    {
-                        Record.ID = int.Parse(reader["ID"].ToString());
-                        Record.Type = reader["Type"].ToString();
-                        Record.TableName = reader["TableName"].ToString();
-                        Record.RowsCount = reader["RowsCount"].ToString();
-                        Record.ColsCount = reader["ColsCount"].ToString();
-                        Record.X_Name = reader["X_Name"].ToString();
-                        Record.Y_Name = reader["Y_Name"].ToString();
-                        Record.X_Min = reader["X_Min"].ToString();
-                        Record.X_Max = reader["X_Max"].ToString();
-                        Record.Y_Min = reader["Y_Min"].ToString();
-                        Record.Y_Max = reader["Y_Max"].ToString();
-                        Record.Address_Start = reader["Address_Start"].ToString();
-                        Record.Address_End = reader["Address_End"].ToString();
-                        Record.DataSize = reader["DataSize"].ToString();
-                        Record.Type_Cryption = reader["Type_Cryption"].ToString();
-                        Record.TableName_Cryption = reader["TableName_Cryption"].ToString();
-                        Record.RowsCount_Cryption = reader["RowsCount_Cryption"].ToString();
-                        Record.ColsCount_Cryption = reader["ColsCount_Cryption"].ToString();
-                        Record.X_Name_Cryption = reader["X_Name_Cryption"].ToString();
-                        Record.Y_Name_Cryption = reader["Y_Name_Cryption"].ToString();
-                        Record.Address_Start_Cryption = reader["Address_Start_Cryption"].ToString();
-                        Record.Address_End_Cryption = reader["Address_End_Cryption"].ToString();
-                        Record.DataSize_Cryption = reader["DataSize_Cryption"].ToString();
-                    }
-                    con.Close();
-                }
-            }
-            return Record;
-        }
- 
-
-        // Get TableName, RowsCount And ColsCount From AdvanceRemap Table
-        public static AdvanceRemap GetDataFromAdvanceRemap(string GetType)
-        {
-            AdvanceRemap Record = new AdvanceRemap();
-            string connstr = ConfigurationManager.ConnectionStrings["ProMapAccessDB"].ConnectionString;
-            string Query = "";
-
-            Query = "SELECT * FROM AdvanceRemap WHERE Type = '" + GetType + "';";
-
-            using (OleDbConnection con = new OleDbConnection(connstr))
-            {
-                using (OleDbCommand cmd = new OleDbCommand(Query, con))
-                {
-                    con.Open();
-                    OleDbDataReader reader = cmd.ExecuteReader();
-                    while (reader.Read())
-                    {
-                        Record.ID = int.Parse(reader["ID"].ToString());
-                        Record.Type = reader["Type"].ToString();
-                        Record.TableName = reader["TableName"].ToString();
-                        Record.RowsCount = reader["RowsCount"].ToString();
-                        Record.ColsCount = reader["ColsCount"].ToString();
-                        Record.X_Name = reader["X_Name"].ToString();
-                        Record.Y_Name = reader["Y_Name"].ToString();
-                        Record.X_Min = reader["X_Min"].ToString();
-                        Record.X_Max = reader["X_Max"].ToString();
-                        Record.Y_Min = reader["Y_Min"].ToString();
-                        Record.Y_Max = reader["Y_Max"].ToString();
-                        Record.Address_Start = reader["Address_Start"].ToString();
-                        Record.Address_End = reader["Address_End"].ToString();
-                        Record.DataSize = reader["DataSize"].ToString();
-                        Record.Type_Cryption = reader["Type_Cryption"].ToString();
-                        Record.TableName_Cryption = reader["TableName_Cryption"].ToString();
-                        Record.RowsCount_Cryption = reader["RowsCount_Cryption"].ToString();
-                        Record.ColsCount_Cryption = reader["ColsCount_Cryption"].ToString();
-                        Record.X_Name_Cryption = reader["X_Name_Cryption"].ToString();
-                        Record.Y_Name_Cryption = reader["Y_Name_Cryption"].ToString();
-                        Record.Address_Start_Cryption = reader["Address_Start_Cryption"].ToString();
-                        Record.Address_End_Cryption = reader["Address_End_Cryption"].ToString();
-                        Record.DataSize_Cryption = reader["DataSize_Cryption"].ToString();
-                    }
-                    con.Close();
-                }
-            }
-
-            return Record;
-        }
-        public static AdvanceRemap GetDataFromAdvanceRemap(string GetType, int GetID)
-        {
-            AdvanceRemap Record = new AdvanceRemap();
-            string connstr = ConfigurationManager.ConnectionStrings["ProMapAccessDB"].ConnectionString;
-            string Query = "";
-
-            Query = "SELECT * FROM AdvanceRemap WHERE Type = '" + GetType + "' AND ID = " + GetID.ToString() + ";";
-
-            using (OleDbConnection con = new OleDbConnection(connstr))
-            {
-                using (OleDbCommand cmd = new OleDbCommand(Query, con))
-                {
-                    con.Open();
-                    OleDbDataReader reader = cmd.ExecuteReader();
-                    while (reader.Read())
-                    {
-                        Record.ID = int.Parse(reader["ID"].ToString());
-                        Record.Type = reader["Type"].ToString();
-                        Record.TableName = reader["TableName"].ToString();
-                        Record.RowsCount = reader["RowsCount"].ToString();
-                        Record.ColsCount = reader["ColsCount"].ToString();
-                        Record.X_Name = reader["X_Name"].ToString();
-                        Record.Y_Name = reader["Y_Name"].ToString();
-                        Record.X_Min = reader["X_Min"].ToString();
-                        Record.X_Max = reader["X_Max"].ToString();
-                        Record.Y_Min = reader["Y_Min"].ToString();
-                        Record.Y_Max = reader["Y_Max"].ToString();
-                        Record.Address_Start = reader["Address_Start"].ToString();
-                        Record.Address_End = reader["Address_End"].ToString();
-                        Record.DataSize = reader["DataSize"].ToString();
-                        Record.Type_Cryption = reader["Type_Cryption"].ToString();
-                        Record.TableName_Cryption = reader["TableName_Cryption"].ToString();
-                        Record.RowsCount_Cryption = reader["RowsCount_Cryption"].ToString();
-                        Record.ColsCount_Cryption = reader["ColsCount_Cryption"].ToString();
-                        Record.X_Name_Cryption = reader["X_Name_Cryption"].ToString();
-                        Record.Y_Name_Cryption = reader["Y_Name_Cryption"].ToString();
-                        Record.Address_Start_Cryption = reader["Address_Start_Cryption"].ToString();
-                        Record.Address_End_Cryption = reader["Address_End_Cryption"].ToString();
-                        Record.DataSize_Cryption = reader["DataSize_Cryption"].ToString();
-                    }
-                    con.Close();
-                }
-            }
-
-            return Record;
-        }
-
-        // Count The Number Of Records In AdvanceRemap Table
-        public static int CountInAdvanceRemap(string Col, string ColValue)
-        {
-            string connstr = ConfigurationManager.ConnectionStrings["ProMapAccessDB"].ConnectionString;
-            int NumberOfECUs = 0;
-
-            using (OleDbConnection con = new OleDbConnection(connstr))
-            {
-                using (OleDbCommand cmd = new OleDbCommand("SELECT COUNT(*) AS NumberOfECUs FROM AdvanceRemap WHERE " + Col + " = '" + ColValue + "';", con))
-                {
-                    con.Open();
-                    NumberOfECUs = (int)cmd.ExecuteScalar();
-                    con.Close();
-                }
-            }
-
-            return NumberOfECUs;
-        }
-
-
-        //                                                  ExistingEcus Functions                                           
-        // FirstOrDefault() For ExistingEcus Table
-
-        // Update ExistingEcus Table
-        public static bool UpdateExistingEcus(ExistingEcu New_Value)
+        public static bool UpdateTable(ExistingEcu New_Value)
         {
             bool isUpdated = false;
-            string constr = "Provider=Microsoft.ACE.OLEDB.12.0; Data Source = E:/User/work/Remap/source - Developing/ProMap 20190911(Ver 1)- Source/67 ProMap 991107 zarvan v5.2.0/ProMap/PromapDatabase.mdb";
-            OleDbConnection dbcon = new OleDbConnection(constr);
+            OleDbConnection dbcon = new OleDbConnection(connstr1);
 
             try
             {
@@ -836,92 +407,10 @@ namespace ProMap
 
             return isUpdated;
         }
-        public static ExistingEcu EE_FirstOrDefault(int DefaultID)
-        {
-            ExistingEcu Record = new ExistingEcu();
-            string connstr = ConfigurationManager.ConnectionStrings["ProMapAccessDB"].ConnectionString;
-            string Query = "";
-
-            Query = "SELECT * FROM ExistingEcus WHERE ID = " + DefaultID.ToString() + ";";
-
-            using (OleDbConnection con = new OleDbConnection(connstr))
-            {
-                using (OleDbCommand cmd = new OleDbCommand(Query, con))
-                {
-                    con.Open();
-                    OleDbDataReader reader = cmd.ExecuteReader();
-                    while (reader.Read())
-                    {
-                        Record.ID = int.Parse(reader["ID"].ToString());
-                        Record.Specification_ID = int.Parse(reader["Specification_ID"].ToString());
-                        Record.Connection_ID = int.Parse(reader["ConnectionID"].ToString());
-                        Record.FileName = reader["FileName"].ToString();
-                        Record.Comment = reader["Comment"].ToString();
-                    }
-                    con.Close();
-                }
-            }
-            return Record;
-        }
-
-        // Delete Item From ExistingEcus Table
-        public static bool DeleteFromExistingEcus(int DeleteID)
-        {
-            bool isDeleted = false;
-            string constr = "Provider=Microsoft.Jet.OLEDB.4.0; Data Source = E:/User/work/Remap/source - Developing/ProMap 20190911(Ver 1)- Source/67 ProMap 991107 zarvan v5.2.0/ProMap/PromapDatabase.mdb";
-            OleDbConnection dbcon = new OleDbConnection(constr);
-
-            try
-            {
-                OleDbCommand cmd = dbcon.CreateCommand();
-                dbcon.Open();
-                cmd.CommandText = "DELETE FROM ExistingEcus WHERE ID = " + DeleteID.ToString();
-                cmd.Connection = dbcon;
-                cmd.ExecuteNonQuery();
-                dbcon.Close();
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("Insert Error:" + ex.Message);
-            }
-            return isDeleted;
-        }
-
-
-        //                                                  DefaultLanguage Functions                                        
-        // FirstOrDefault() For DefaultLanguage Table
-        public static DefaultLanguage DL_FirstOrDefault(int DefaultID)
-        {
-            DefaultLanguage Record = new DefaultLanguage();
-            string connstr = ConfigurationManager.ConnectionStrings["ProMapAccessDB"].ConnectionString;
-            string Query = "";
-
-            Query = "SELECT * FROM DefaultLanguage WHERE ID = " + DefaultID.ToString() + ";";
-
-            using (OleDbConnection con = new OleDbConnection(connstr))
-            {
-                using (OleDbCommand cmd = new OleDbCommand(Query, con))
-                {
-                    con.Open();
-                    OleDbDataReader reader = cmd.ExecuteReader();
-                    while (reader.Read())
-                    {
-                        Record.ID = int.Parse(reader["ID"].ToString());
-                        Record.lang = reader["lang"].ToString();
-                    }
-                    con.Close();
-                }
-            }
-
-            return Record;
-        }
-
-        // Update DefaultLanguage Table
-        public static bool UpdateDefaultLanguage(DefaultLanguage New_Value)
+        public static bool UpdateTable(DefaultLanguage New_Value)
         {
             bool isUpdated = false;
-            string constr = "Provider=Microsoft.ACE.OLEDB.12.0; Data Source = E:/User/work/Remap/source - Developing/ProMap 20190911(Ver 1)- Source/67 ProMap 991107 zarvan v5.2.0/ProMap/PromapDatabase.mdb";
-            OleDbConnection dbcon = new OleDbConnection(constr);
+            OleDbConnection dbcon = new OleDbConnection(connstr1);
 
             try
             {
@@ -943,84 +432,10 @@ namespace ProMap
 
             return isUpdated;
         }
-
-
-        //                                                  History Functions                                                
-        // FirstOrDefault() For History Table
-        public static History HR_FirstOrDefault(int DefaultID)
-        {
-            History Record = new History();
-            string connstr = ConfigurationManager.ConnectionStrings["ProMapAccessDB"].ConnectionString;
-            string Query = "";
-
-            Query = "SELECT * FROM History WHERE ID = " + DefaultID.ToString() + ";";
-
-            using (OleDbConnection con = new OleDbConnection(connstr))
-            {
-                using (OleDbCommand cmd = new OleDbCommand(Query, con))
-                {
-                    con.Open();
-                    OleDbDataReader reader = cmd.ExecuteReader();
-                    while (reader.Read())
-                    {
-                        Record.ID = int.Parse(reader["ID"].ToString());
-                        Record.SpecificationID = int.Parse(reader["SpecificationID"].ToString());
-                    }
-                    con.Close();
-                }
-            }
-            return Record;
-        }
-        public static History HR_FirstOrDefault()
-        {
-            History Record = new History();
-            string connstr = ConfigurationManager.ConnectionStrings["ProMapAccessDB"].ConnectionString;
-            string Query = "";
-
-            Query = "SELECT * FROM History;";
-
-            using (OleDbConnection con = new OleDbConnection(connstr))
-            {
-                using (OleDbCommand cmd = new OleDbCommand(Query, con))
-                {
-                    con.Open();
-                    OleDbDataReader reader = cmd.ExecuteReader();
-                    while (reader.Read())
-                    {
-                        Record.ID = int.Parse(reader["ID"].ToString());
-                        Record.SpecificationID = int.Parse(reader["SpecificationID"].ToString());
-                    }
-                    con.Close();
-                }
-            }
-            return Record;
-        }
-
-        // Count The Number Of Records In History Table
-        public static int CountInHistory()
-        {
-            string connstr = ConfigurationManager.ConnectionStrings["ProMapAccessDB"].ConnectionString;
-            int NumberOfECUs = 0;
-
-            using (OleDbConnection con = new OleDbConnection(connstr))
-            {
-                using (OleDbCommand cmd = new OleDbCommand("SELECT COUNT(*) AS NumberOfECUs FROM History", con))
-                {
-                    con.Open();
-                    NumberOfECUs = (int)cmd.ExecuteScalar();
-                    con.Close();
-                }
-            }
-
-            return NumberOfECUs;
-        }
-
-        // Update History Table
-        public static bool UpdateHistory(History New_Value)
+        public static bool UpdateTable(History New_Value)
         {
             bool isUpdated = false;
-            string constr = "Provider=Microsoft.ACE.OLEDB.12.0; Data Source = E:/User/work/Remap/source - Developing/ProMap 20190911(Ver 1)- Source/67 ProMap 991107 zarvan v5.2.0/ProMap/PromapDatabase.mdb";
-            OleDbConnection dbcon = new OleDbConnection(constr);
+            OleDbConnection dbcon = new OleDbConnection(connstr1);
 
             try
             {
@@ -1043,16 +458,155 @@ namespace ProMap
             return isUpdated;
         }
 
-        //                                                  Connection Functions                                             
-        public static Connection CO_FirstOrDefault(int DefaultID)
+        // Count
+        public static int CountInTable(String tbName)
         {
-            Connection Record = new Connection();
-            string connstr = ConfigurationManager.ConnectionStrings["ProMapAccessDB"].ConnectionString;
-            string Query = "";
+            int NumberOfRecords = 0;
+            Query = "SELECT COUNT(*) AS NumberOfECUs FROM " + tbName;
 
-            Query = "SELECT * FROM Connection WHERE ID = " + DefaultID.ToString() + ";";
+            using (OleDbConnection con = new OleDbConnection(connstr1))
+            {
+                using (OleDbCommand cmd = new OleDbCommand(Query, con))
+                {
+                    con.Open();
+                    NumberOfRecords = (int)cmd.ExecuteScalar();
+                    con.Close();
+                }
+            }
 
-            using (OleDbConnection con = new OleDbConnection(connstr))
+            return NumberOfRecords;
+        }
+        public static int CountInTable(String tbName, int CountID)
+        {
+            int NumberOfECUs = 0;
+            Query = "SELECT COUNT(*) AS NumberOfECUs FROM " + tbName + " WHERE ID = " + CountID.ToString() + "';";
+
+            using (OleDbConnection con = new OleDbConnection(connstr1))
+            {
+                using (OleDbCommand cmd = new OleDbCommand(Query, con))
+                {
+                    con.Open();
+                    NumberOfECUs = (int)cmd.ExecuteScalar();
+                    con.Close();
+                }
+            }
+
+            return NumberOfECUs;
+        }
+        public static int CountInTable(String tbName, String Col, String ColValue)
+        {
+            int NumberOfECUs = 0;
+            Query = "SELECT COUNT(*) AS NumberOfECUs FROM " + tbName + " WHERE " + Col + " = '" + ColValue + "';";
+
+            using (OleDbConnection con = new OleDbConnection(connstr1))
+            {
+                using (OleDbCommand cmd = new OleDbCommand(Query, con))
+                {
+                    con.Open();
+                    NumberOfECUs = (int)cmd.ExecuteScalar();
+                    con.Close();
+                }
+            }
+
+            return NumberOfECUs;
+        }
+        public static int CountInTable(String tbName, String Col, int Leng, int id)
+        {
+            int NumberOfECUs = 0;
+            Query = "SELECT COUNT(*) AS NumberOfECUs FROM " + tbName + " WHERE ID = " + id.ToString() + "AND LEN(" + Col + ") > " + Leng.ToString() + ";";
+
+            using (OleDbConnection con = new OleDbConnection(connstr1))
+            {
+                using (OleDbCommand cmd = new OleDbCommand(Query, con))
+                {
+                    con.Open();
+                    NumberOfECUs = (int)cmd.ExecuteScalar();
+                    con.Close();
+                }
+            }
+
+            return NumberOfECUs;
+        }
+        public static int CountInTable(String tbName, String Col, int Leng, int id1, int id2)
+        {
+            int NumberOfECUs = 0;
+            string Query = "SELECT COUNT(*) AS NumberOfECUs FROM " + tbName + " WHERE (ID = " + id1.ToString() + " OR ID = " + id2.ToString() + ") AND Len(" + Col + ") > " + Leng.ToString() + " AS ColLen;";
+
+            using (OleDbConnection con = new OleDbConnection(connstr1))
+            {
+                using (OleDbCommand cmd = new OleDbCommand(Query, con))
+                {
+                    con.Open();
+                    NumberOfECUs = (int)cmd.ExecuteScalar();
+                    con.Close();
+                }
+            }
+
+            return NumberOfECUs;
+        }
+        public static int CountInTable(String tbName, int id1, int id2, int id3, int id4)
+        {
+            int NumberOfECUs = 0;
+            string Query = "SELECT COUNT(*) AS NumberOfECUs FROM " + tbName + " WHERE ID = " + id1.ToString() + " OR ID = " + id2.ToString() + " OR ID = " + id3.ToString() + " OR ID = " + id4.ToString() + ";";
+
+            using (OleDbConnection con = new OleDbConnection(connstr1))
+            {
+                using (OleDbCommand cmd = new OleDbCommand(Query, con))
+                {
+                    con.Open();
+                    NumberOfECUs = (int)cmd.ExecuteScalar();
+                    con.Close();
+                }
+            }
+
+            return NumberOfECUs;
+        }
+        public static int CountInTable(String tbName, String Col, Dictionary<int, String> SearchList)
+        {
+            int NumberOfECUs = 0;
+            int Leng = SearchList.Count;
+
+
+            using (OleDbConnection con = new OleDbConnection(connstr1))
+            {
+                for (int i = 0; i < Leng; i++)
+                {
+                    Query = "SELECT COUNT(*) AS NumberOfECUs FROM ECUsSpecification WHERE " + Col + " = " + SearchList[i].ToString() + ";";
+                    using (OleDbCommand cmd = new OleDbCommand(Query, con))
+                    {
+                        con.Open();
+                        NumberOfECUs = (int)cmd.ExecuteScalar();
+                        con.Close();
+                    }
+                }
+            }
+
+            return NumberOfECUs;
+        }
+        public static int CountInTable(String tbName, String ColCont1, String Cont1, String ColCont2, String Cont2, String ColLeng, int Leng)
+        {
+            int NumberOfECUs = 0;
+            string Query = "SELECT COUNT(*) AS NumberOfECUs FROM " + tbName + " WHERE InStr(" + ColCont1 + ",'" + Cont1 + "') AND InStr(" + ColCont2 + ",'" + Cont2 + "') AND LEN(" + ColLeng + ") >" + Leng.ToString() + ";";
+
+            using (OleDbConnection con = new OleDbConnection(connstr1))
+            {
+                using (OleDbCommand cmd = new OleDbCommand(Query, con))
+                {
+                    con.Open();
+                    NumberOfECUs = (int)cmd.ExecuteScalar();
+                    con.Close();
+                }
+            }
+
+            return NumberOfECUs;
+        }
+
+        // GetData
+        public static ECUsSpecification GetDataFromTable(ref ECUsSpecification ES, String Col, int Leng, int id)
+        {
+            Query = "SELECT * FROM ECUsSpecification WHERE ID = " + id.ToString() + " AND Len(" + Col + ") >" + Leng.ToString() + ";";
+
+            using (OleDbConnection con = new OleDbConnection(connstr1))
             {
                 using (OleDbCommand cmd = new OleDbCommand(Query, con))
                 {
@@ -1060,32 +614,39 @@ namespace ProMap
                     OleDbDataReader reader = cmd.ExecuteReader();
                     while (reader.Read())
                     {
-                        Record.ID = int.Parse(reader["ID"].ToString());
-                        Record.Protocols_ID = int.Parse(reader["Protocols_ID"].ToString());
-                        Record.Pin = int.Parse(reader["Pin"].ToString());
-                        Record.Baudrate = int.Parse(reader["Baudrate"].ToString());
-                        Record.Header = reader["Header"].ToString();
-                        Record.Start_Command = reader["Start_Command"].ToString();
-                        Record.End_Command = reader["End_Command"].ToString();
-                        Record.Itteration_Command = reader["Itteration_Command"].ToString();
+                        ES.ID = int.Parse(reader["ID"].ToString());
+                        ES.Manufacturer = reader["Manufacturer"].ToString();
+                        ES.DeviceName = reader["DeviceName"].ToString();
+                        ES.Type = reader["Type"].ToString();
+                        ES.BootRef = reader["BootRef"].ToString();
+                        ES.SoftRef = reader["SoftRef"].ToString();
+                        ES.Calibration = reader["Calibration"].ToString();
+                        ES.BinFileName = reader["BinFileName"].ToString();
+                        ES.BaudRate = reader["BaudRate"].ToString();
+                        ES.CRC_Address = reader["CRC_Address"].ToString();
+                        ES.ConnectionID = int.Parse(reader["ConnectionID"].ToString());
+                        ES.Type1_AddressRemap = reader["Type1_AddressRemap"].ToString();
+                        ES.Type2_TableRemap = reader["Type2_TableRemap"].ToString();
+                        ES.ProductNumber = reader["ProductNumber"].ToString();
+                        ES.HardwareCode = reader["HardwareCode"].ToString();
+                        ES.Comment = reader["Comment"].ToString();
+                        ES.UserID = int.Parse(reader["UserID"].ToString());
+                        ES.type1Cryption = reader["type1Cryption"].ToString();
+                        ES.binCryption = reader["binCryption"].ToString();
+                        ES.crcCryption = reader["crcCryption"].ToString();
                     }
                     con.Close();
                 }
+
             }
-            return Record;
+
+            return ES;
         }
-
-
-        //                                                  Protocols Functions                                              
-        public static Protocol PR_FirstOrDefault(int DefaultID)
+        public static ECUsSpecification GetDataFromTable(ref ECUsSpecification ES, string Col, int Leng, int id1, int id2)
         {
-            Protocol Record = new Protocol();
-            string connstr = ConfigurationManager.ConnectionStrings["ProMapAccessDB"].ConnectionString;
-            string Query = "";
+            Query = "SELECT * FROM ECUsSpecification WHERE (ID = " + id1.ToString() + " OR ID = " + id2.ToString() + ") AND Len(" + Col + ") > " + Leng.ToString() + ";";
 
-            Query = "SELECT * FROM Protocols WHERE ID = " + DefaultID.ToString() + ";";
-
-            using (OleDbConnection con = new OleDbConnection(connstr))
+            using (OleDbConnection con = new OleDbConnection(connstr1))
             {
                 using (OleDbCommand cmd = new OleDbCommand(Query, con))
                 {
@@ -1093,23 +654,329 @@ namespace ProMap
                     OleDbDataReader reader = cmd.ExecuteReader();
                     while (reader.Read())
                     {
-                        Record.ID = int.Parse(reader["ID"].ToString());
-                        Record.Name = reader["Protocol Name"].ToString();
+                        ES.ID = int.Parse(reader["ID"].ToString());
+                        ES.Manufacturer = reader["Manufacturer"].ToString();
+                        ES.DeviceName = reader["DeviceName"].ToString();
+                        ES.Type = reader["Type"].ToString();
+                        ES.BootRef = reader["BootRef"].ToString();
+                        ES.SoftRef = reader["SoftRef"].ToString();
+                        ES.Calibration = reader["Calibration"].ToString();
+                        ES.BinFileName = reader["BinFileName"].ToString();
+                        ES.BaudRate = reader["BaudRate"].ToString();
+                        ES.CRC_Address = reader["CRC_Address"].ToString();
+                        ES.ConnectionID = int.Parse(reader["ConnectionID"].ToString());
+                        ES.Type1_AddressRemap = reader["Type1_AddressRemap"].ToString();
+                        ES.Type2_TableRemap = reader["Type2_TableRemap"].ToString();
+                        ES.ProductNumber = reader["ProductNumber"].ToString();
+                        ES.HardwareCode = reader["HardwareCode"].ToString();
+                        ES.Comment = reader["Comment"].ToString();
+                        ES.UserID = int.Parse(reader["UserID"].ToString());
+                        ES.type1Cryption = reader["type1Cryption"].ToString();
+                        ES.binCryption = reader["binCryption"].ToString();
+                        ES.crcCryption = reader["crcCryption"].ToString();
+                    }
+                    con.Close();
+                }
+
+            }
+
+            return ES;
+        }
+        public static ECUsSpecification GetDataFromTable(ref ECUsSpecification ES, int id1, int id2, int id3, int id4)
+        {
+            Query = "SELECT * FROM ECUsSpecification WHERE ID = " + id1.ToString() + " OR ID = " + id2.ToString() + " OR ID = " + id3.ToString() + " OR ID = " + id4.ToString() + ";";
+
+            using (OleDbConnection con = new OleDbConnection(connstr1))
+            {
+                using (OleDbCommand cmd = new OleDbCommand(Query, con))
+                {
+                    con.Open();
+                    OleDbDataReader reader = cmd.ExecuteReader();
+                    while (reader.Read())
+                    {
+                        ES.ID = int.Parse(reader["ID"].ToString());
+                        ES.Manufacturer = reader["Manufacturer"].ToString();
+                        ES.DeviceName = reader["DeviceName"].ToString();
+                        ES.Type = reader["Type"].ToString();
+                        ES.BootRef = reader["BootRef"].ToString();
+                        ES.SoftRef = reader["SoftRef"].ToString();
+                        ES.Calibration = reader["Calibration"].ToString();
+                        ES.BinFileName = reader["BinFileName"].ToString();
+                        ES.BaudRate = reader["BaudRate"].ToString();
+                        ES.CRC_Address = reader["CRC_Address"].ToString();
+                        ES.ConnectionID = int.Parse(reader["ConnectionID"].ToString());
+                        ES.Type1_AddressRemap = reader["Type1_AddressRemap"].ToString();
+                        ES.Type2_TableRemap = reader["Type2_TableRemap"].ToString();
+                        ES.ProductNumber = reader["ProductNumber"].ToString();
+                        ES.HardwareCode = reader["HardwareCode"].ToString();
+                        ES.Comment = reader["Comment"].ToString();
+                        ES.UserID = int.Parse(reader["UserID"].ToString());
+                        ES.type1Cryption = reader["type1Cryption"].ToString();
+                        ES.binCryption = reader["binCryption"].ToString();
+                        ES.crcCryption = reader["crcCryption"].ToString();
+                    }
+                    con.Close();
+                }
+
+            }
+
+            return ES;
+        }
+        public static ECUsSpecification GetDataFromTable(ref ECUsSpecification ES, string ColCont1, string Cont1, string ColCont2, string Cont2, string ColLeng, int Leng)
+        {
+            Query = "SELECT * FROM ECUsSpecification WHERE InStr(" + ColCont1 + ",'" + Cont1 + "') AND InStr(" + ColCont2 + ",'" + Cont2 + "') AND LEN(" + ColLeng + ") >" + Leng.ToString() + ";";
+
+            using (OleDbConnection con = new OleDbConnection(connstr1))
+            {
+                using (OleDbCommand cmd = new OleDbCommand(Query, con))
+                {
+                    con.Open();
+                    OleDbDataReader reader = cmd.ExecuteReader();
+                    while (reader.Read())
+                    {
+                        ES.ID = int.Parse(reader["ID"].ToString());
+                        ES.Manufacturer = reader["Manufacturer"].ToString();
+                        ES.DeviceName = reader["DeviceName"].ToString();
+                        ES.Type = reader["Type"].ToString();
+                        ES.BootRef = reader["BootRef"].ToString();
+                        ES.SoftRef = reader["SoftRef"].ToString();
+                        ES.Calibration = reader["Calibration"].ToString();
+                        ES.BinFileName = reader["BinFileName"].ToString();
+                        ES.BaudRate = reader["BaudRate"].ToString();
+                        ES.CRC_Address = reader["CRC_Address"].ToString();
+                        ES.ConnectionID = int.Parse(reader["ConnectionID"].ToString());
+                        ES.Type1_AddressRemap = reader["Type1_AddressRemap"].ToString();
+                        ES.Type2_TableRemap = reader["Type2_TableRemap"].ToString();
+                        ES.ProductNumber = reader["ProductNumber"].ToString();
+                        ES.HardwareCode = reader["HardwareCode"].ToString();
+                        ES.Comment = reader["Comment"].ToString();
+                        ES.UserID = int.Parse(reader["UserID"].ToString());
+                        ES.type1Cryption = reader["type1Cryption"].ToString();
+                        ES.binCryption = reader["binCryption"].ToString();
+                        ES.crcCryption = reader["crcCryption"].ToString();
+                    }
+                    con.Close();
+                }
+
+            }
+            return ES;
+        }
+        public static ECUsSpecification GetDataFromTable(ref ECUsSpecification ES, string Col, Dictionary<int, string> SearchList)
+        {
+            int Leng = SearchList.Count();
+
+            using (OleDbConnection con = new OleDbConnection(connstr1))
+            {
+                for (int i = 0; i < Leng; i++)
+                {
+                    Query = "SELECT * FROM ECUsSpecification WHERE " + Col + " = " + SearchList[i].ToString() + ";";
+                    using (OleDbCommand cmd = new OleDbCommand(Query, con))
+                    {
+                        con.Open();
+                        OleDbDataReader reader = cmd.ExecuteReader();
+                        while (reader.Read())
+                        {
+                            ES.ID = int.Parse(reader["ID"].ToString());
+                            ES.Manufacturer = reader["Manufacturer"].ToString();
+                            ES.DeviceName = reader["DeviceName"].ToString();
+                            ES.Type = reader["Type"].ToString();
+                            ES.BootRef = reader["BootRef"].ToString();
+                            ES.SoftRef = reader["SoftRef"].ToString();
+                            ES.Calibration = reader["Calibration"].ToString();
+                            ES.BinFileName = reader["BinFileName"].ToString();
+                            ES.BaudRate = reader["BaudRate"].ToString();
+                            ES.CRC_Address = reader["CRC_Address"].ToString();
+                            ES.ConnectionID = int.Parse(reader["ConnectionID"].ToString());
+                            ES.Type1_AddressRemap = reader["Type1_AddressRemap"].ToString();
+                            ES.Type2_TableRemap = reader["Type2_TableRemap"].ToString();
+                            ES.ProductNumber = reader["ProductNumber"].ToString();
+                            ES.HardwareCode = reader["HardwareCode"].ToString();
+                            ES.Comment = reader["Comment"].ToString();
+                            ES.UserID = int.Parse(reader["UserID"].ToString());
+                            ES.type1Cryption = reader["type1Cryption"].ToString();
+                            ES.binCryption = reader["binCryption"].ToString();
+                            ES.crcCryption = reader["crcCryption"].ToString();
+                        }
+                        con.Close();
+                    }
+                }
+
+
+            }
+            return ES;
+        }
+        public static AdvanceRemap GetDataFromTable(ref AdvanceRemap AR, string GetType)
+        {
+            Query = "SELECT * FROM AdvanceRemap WHERE Type = '" + GetType + "';";
+
+            using (OleDbConnection con = new OleDbConnection(connstr1))
+            {
+                using (OleDbCommand cmd = new OleDbCommand(Query, con))
+                {
+                    con.Open();
+                    OleDbDataReader reader = cmd.ExecuteReader();
+                    while (reader.Read())
+                    {
+                        AR.ID = int.Parse(reader["ID"].ToString());
+                        AR.Type = reader["Type"].ToString();
+                        AR.TableName = reader["TableName"].ToString();
+                        AR.RowsCount = reader["RowsCount"].ToString();
+                        AR.ColsCount = reader["ColsCount"].ToString();
+                        AR.X_Name = reader["X_Name"].ToString();
+                        AR.Y_Name = reader["Y_Name"].ToString();
+                        AR.X_Min = reader["X_Min"].ToString();
+                        AR.X_Max = reader["X_Max"].ToString();
+                        AR.Y_Min = reader["Y_Min"].ToString();
+                        AR.Y_Max = reader["Y_Max"].ToString();
+                        AR.Address_Start = reader["Address_Start"].ToString();
+                        AR.Address_End = reader["Address_End"].ToString();
+                        AR.DataSize = reader["DataSize"].ToString();
+                        AR.Type_Cryption = reader["Type_Cryption"].ToString();
+                        AR.TableName_Cryption = reader["TableName_Cryption"].ToString();
+                        AR.RowsCount_Cryption = reader["RowsCount_Cryption"].ToString();
+                        AR.ColsCount_Cryption = reader["ColsCount_Cryption"].ToString();
+                        AR.X_Name_Cryption = reader["X_Name_Cryption"].ToString();
+                        AR.Y_Name_Cryption = reader["Y_Name_Cryption"].ToString();
+                        AR.Address_Start_Cryption = reader["Address_Start_Cryption"].ToString();
+                        AR.Address_End_Cryption = reader["Address_End_Cryption"].ToString();
+                        AR.DataSize_Cryption = reader["DataSize_Cryption"].ToString();
                     }
                     con.Close();
                 }
             }
-            return Record;
+
+            return AR;
+        }
+        public static AdvanceRemap GetDataFromTable(ref AdvanceRemap AR, string GetType, int GetID)
+        {
+            Query = "SELECT * FROM AdvanceRemap WHERE Type = '" + GetType + "' AND ID = " + GetID.ToString() + ";";
+
+            using (OleDbConnection con = new OleDbConnection(connstr1))
+            {
+                using (OleDbCommand cmd = new OleDbCommand(Query, con))
+                {
+                    con.Open();
+                    OleDbDataReader reader = cmd.ExecuteReader();
+                    while (reader.Read())
+                    {
+                        AR.ID = int.Parse(reader["ID"].ToString());
+                        AR.Type = reader["Type"].ToString();
+                        AR.TableName = reader["TableName"].ToString();
+                        AR.RowsCount = reader["RowsCount"].ToString();
+                        AR.ColsCount = reader["ColsCount"].ToString();
+                        AR.X_Name = reader["X_Name"].ToString();
+                        AR.Y_Name = reader["Y_Name"].ToString();
+                        AR.X_Min = reader["X_Min"].ToString();
+                        AR.X_Max = reader["X_Max"].ToString();
+                        AR.Y_Min = reader["Y_Min"].ToString();
+                        AR.Y_Max = reader["Y_Max"].ToString();
+                        AR.Address_Start = reader["Address_Start"].ToString();
+                        AR.Address_End = reader["Address_End"].ToString();
+                        AR.DataSize = reader["DataSize"].ToString();
+                        AR.Type_Cryption = reader["Type_Cryption"].ToString();
+                        AR.TableName_Cryption = reader["TableName_Cryption"].ToString();
+                        AR.RowsCount_Cryption = reader["RowsCount_Cryption"].ToString();
+                        AR.ColsCount_Cryption = reader["ColsCount_Cryption"].ToString();
+                        AR.X_Name_Cryption = reader["X_Name_Cryption"].ToString();
+                        AR.Y_Name_Cryption = reader["Y_Name_Cryption"].ToString();
+                        AR.Address_Start_Cryption = reader["Address_Start_Cryption"].ToString();
+                        AR.Address_End_Cryption = reader["Address_End_Cryption"].ToString();
+                        AR.DataSize_Cryption = reader["DataSize_Cryption"].ToString();
+                    }
+                    con.Close();
+                }
+            }
+
+            return AR;
         }
 
+        // Contains
+        public static ECUsSpecification TableContains(ECUsSpecification ES, String Col, String ColValue)
+        {
+            Query = "SELECT * FROM ECUsSpecification WHERE " + Col + " = '" + ColValue + "';";
 
-        //                                                  Common Functions                                                 
+            using (OleDbConnection con = new OleDbConnection(connstr1))
+            {
+                using (OleDbCommand cmd = new OleDbCommand(Query, con))
+                {
+                    con.Open();
+                    OleDbDataReader reader = cmd.ExecuteReader();
+                    while (reader.Read())
+                    {
+                        ES.ID = int.Parse(reader["ID"].ToString());
+                        ES.Manufacturer = reader["Manufacturer"].ToString();
+                        ES.DeviceName = reader["DeviceName"].ToString();
+                        ES.Type = reader["Type"].ToString();
+                        ES.BootRef = reader["BootRef"].ToString();
+                        ES.SoftRef = reader["SoftRef"].ToString();
+                        ES.Calibration = reader["Calibration"].ToString();
+                        ES.BinFileName = reader["BinFileName"].ToString();
+                        ES.BaudRate = reader["BaudRate"].ToString();
+                        ES.CRC_Address = reader["CRC_Address"].ToString();
+                        ES.ConnectionID = int.Parse(reader["ConnectionID"].ToString());
+                        ES.Type1_AddressRemap = reader["Type1_AddressRemap"].ToString();
+                        ES.Type2_TableRemap = reader["Type2_TableRemap"].ToString();
+                        ES.ProductNumber = reader["ProductNumber"].ToString();
+                        ES.HardwareCode = reader["HardwareCode"].ToString();
+                        ES.Comment = reader["Comment"].ToString();
+                        ES.UserID = int.Parse(reader["UserID"].ToString());
+                        ES.type1Cryption = reader["type1Cryption"].ToString();
+                        ES.type2Cryption = reader["type2Cryption"].ToString();
+                        ES.binCryption = reader["binCryption"].ToString();
+                        ES.crcCryption = reader["crcCryption"].ToString();
+                    }
+                    con.Close();
+                }
+            }
+
+            return ES;
+        }
+        public static ECUsSpecification TableContains(ECUsSpecification ES, String Col, String ColValue, int DefaultID)
+        {
+            Query = "SELECT * FROM ECUsSpecification WHERE " + Col + " = '" + ColValue + "' AND ID = " + DefaultID.ToString() + ";";
+
+            using (OleDbConnection con = new OleDbConnection(connstr1))
+            {
+                using (OleDbCommand cmd = new OleDbCommand(Query, con))
+                {
+                    con.Open();
+                    OleDbDataReader reader = cmd.ExecuteReader();
+                    while (reader.Read())
+                    {
+                        ES.ID = int.Parse(reader["ID"].ToString());
+                        ES.Manufacturer = reader["Manufacturer"].ToString();
+                        ES.DeviceName = reader["DeviceName"].ToString();
+                        ES.Type = reader["Type"].ToString();
+                        ES.BootRef = reader["BootRef"].ToString();
+                        ES.SoftRef = reader["SoftRef"].ToString();
+                        ES.Calibration = reader["Calibration"].ToString();
+                        ES.BinFileName = reader["BinFileName"].ToString();
+                        ES.BaudRate = reader["BaudRate"].ToString();
+                        ES.CRC_Address = reader["CRC_Address"].ToString();
+                        ES.ConnectionID = int.Parse(reader["ConnectionID"].ToString());
+                        ES.Type1_AddressRemap = reader["Type1_AddressRemap"].ToString();
+                        ES.Type2_TableRemap = reader["Type2_TableRemap"].ToString();
+                        ES.ProductNumber = reader["ProductNumber"].ToString();
+                        ES.HardwareCode = reader["HardwareCode"].ToString();
+                        ES.Comment = reader["Comment"].ToString();
+                        ES.UserID = int.Parse(reader["UserID"].ToString());
+                        ES.type1Cryption = reader["type1Cryption"].ToString();
+                        ES.type2Cryption = reader["type2Cryption"].ToString();
+                        ES.binCryption = reader["binCryption"].ToString();
+                        ES.crcCryption = reader["crcCryption"].ToString();
+                    }
+                    con.Close();
+                }
+            }
+
+            return ES;
+        }
+
         // Add Mew Item To The Given Table
-        public static bool AddToDatabase(string tbName, string[] New_Record)
+        public static bool InsertToDatabase(String tbName, String[] New_Record)
         {
             bool isAdded = false;
-            string constr = "Provider=Microsoft.Jet.OLEDB.4.0; Data Source = E:/User/work/Remap/source - Developing/ProMap 20190911(Ver 1)- Source/67 ProMap 991107 zarvan v5.2.0/ProMap/PromapDatabase.mdb";
-            OleDbConnection dbcon = new OleDbConnection(constr);
+            OleDbConnection dbcon = new OleDbConnection(connstr1);
 
             switch (tbName)
             {
@@ -1171,10 +1038,9 @@ namespace ProMap
         }
 
         // Read From Database Tables And Show On Datagirdview
-        public static DataTable ShowOnGridView(string tbName)
+        public static DataTable ShowOnGridView(String tbName)
         {
             DataTable dtECUs = new DataTable();
-            string connstr = ConfigurationManager.ConnectionStrings["ProMapAccessDB"].ConnectionString;
                
             switch (tbName)
             {
@@ -1182,7 +1048,7 @@ namespace ProMap
                 case "ECUsSpecification":
                     try
                     {
-                        using (OleDbConnection con = new OleDbConnection(connstr))
+                        using (OleDbConnection con = new OleDbConnection(connstr1))
                         {
                             using (OleDbCommand cmd = new OleDbCommand("SELECT ECUsSpecification.ID, ECUsSpecification.Manufacturer, ECUsSpecification.Type, ECUsSpecification.BootRef, ECUsSpecification.SoftRef, ECUsSpecification.Calibration FROM ECUsSpecification", con))
                             {
@@ -1203,7 +1069,7 @@ namespace ProMap
                 case "ExistingEcus":
                     try
                     {
-                        using (OleDbConnection con = new OleDbConnection(connstr))
+                        using (OleDbConnection con = new OleDbConnection(connstr1))
                         {
                             using (OleDbCommand cmd = new OleDbCommand("SELECT ExistingEcus.ID, ExistingEcus.Specification_ID, ExistingEcus.Connection_ID, ExistingEcus.FileName, ExistingEcus.Comment FROM ExistingEcus", con))
                             {
@@ -1224,7 +1090,7 @@ namespace ProMap
                 case "Protocols":
                     try
                     {
-                        using (OleDbConnection con = new OleDbConnection(connstr))
+                        using (OleDbConnection con = new OleDbConnection(connstr1))
                         {
                             using (OleDbCommand cmd = new OleDbCommand("SELECT Protocols.ID, Protocols.Name FROM Protocols", con))
                             {
@@ -1245,7 +1111,7 @@ namespace ProMap
                 case "Connection":
                     try
                     {
-                        using (OleDbConnection con = new OleDbConnection(connstr))
+                        using (OleDbConnection con = new OleDbConnection(connstr1))
                         {
                             using (OleDbCommand cmd = new OleDbCommand("SELECT Connection.ID, Connection.Protocols_ID, Connection.Pin, Connection.Baudrate, Connection.Header, Connection.Start_Command, Connection.End_Command, Connection.Itteration_Command FROM Connection", con))
                             {
@@ -1265,10 +1131,9 @@ namespace ProMap
 
             return dtECUs;
         }
-        public static DataTable ShowOnGridView(string tbName, string ColCont, string Cont, string ColLeng, int Leng)
+        public static DataTable ShowOnGridView(String tbName, String ColCont, String Cont, String ColLeng, int Leng)
         {
             DataTable dtECUs = new DataTable();
-            string connstr = ConfigurationManager.ConnectionStrings["ProMapAccessDB"].ConnectionString;
             string Query = "";
             switch (tbName)
             {
@@ -1276,7 +1141,7 @@ namespace ProMap
                 case "ECUsSpecification":
                     try
                     {
-                        using (OleDbConnection con = new OleDbConnection(connstr))
+                        using (OleDbConnection con = new OleDbConnection(connstr1))
                         {
                             Query = "SELECT ECUsSpecification.ID, ECUsSpecification.Manufacturer, ECUsSpecification.Type, ECUsSpecification.BootRef, ECUsSpecification.SoftRef, ECUsSpecification.Calibration FROM ECUsSpecification";
                             Query += "WHERE InStr(" + ColCont + ",'" + Cont + "') AND LEN(" + ColLeng + ") > " + Leng.ToString() + ";";
@@ -1299,7 +1164,7 @@ namespace ProMap
                 case "ExistingEcus":
                     try
                     {
-                        using (OleDbConnection con = new OleDbConnection(connstr))
+                        using (OleDbConnection con = new OleDbConnection(connstr1))
                         {
                             Query = "SELECT ExistingEcus.ID, ExistingEcus.Specification_ID, ExistingEcus.Connection_ID, ExistingEcus.FileName, ExistingEcus.Comment FROM ExistingEcus";
                             Query += "WHERE InStr(" + ColCont + ",'" + Cont + "') AND LEN(" + ColLeng + ") > 0;";
@@ -1322,7 +1187,7 @@ namespace ProMap
                 case "Protocols":
                     try
                     {
-                        using (OleDbConnection con = new OleDbConnection(connstr))
+                        using (OleDbConnection con = new OleDbConnection(connstr1))
                         {
                             Query = "SELECT Protocols.ID, Protocols.Name FROM Protocols";
                             Query += "WHERE InStr(" + ColCont + ",'" + Cont + "') AND LEN(" + ColLeng + ") > 0;";
@@ -1345,7 +1210,7 @@ namespace ProMap
                 case "Connection":
                     try
                     {
-                        using (OleDbConnection con = new OleDbConnection(connstr))
+                        using (OleDbConnection con = new OleDbConnection(connstr1))
                         {
                             Query = "SELECT Connection.ID, Connection.Protocols_ID, Connection.Pin, Connection.Baudrate, Connection.Header, Connection.Start_Command, Connection.End_Command, Connection.Itteration_Command FROM Connection";
                             Query += "WHERE InStr(" + ColCont + ",'" + Cont + "') AND LEN(" + ColLeng + ") > 0;";
@@ -1367,10 +1232,9 @@ namespace ProMap
 
             return dtECUs;
         }
-        public static DataTable ShowOnGridView(string tbName, string ColLeng, int Leng, int id1, int id2)
+        public static DataTable ShowOnGridView(String tbName, String ColLeng, int Leng, int id1, int id2)
         {
             DataTable dtECUs = new DataTable();
-            string connstr = ConfigurationManager.ConnectionStrings["ProMapAccessDB"].ConnectionString;
             string Query = "";
             switch (tbName)
             {
@@ -1378,7 +1242,7 @@ namespace ProMap
                 case "ECUsSpecification":
                     try
                     {
-                        using (OleDbConnection con = new OleDbConnection(connstr))
+                        using (OleDbConnection con = new OleDbConnection(connstr1))
                         {
                             Query = "SELECT ECUsSpecification.ID, ECUsSpecification.Manufacturer, ECUsSpecification.Type, ECUsSpecification.BootRef, ECUsSpecification.SoftRef, ECUsSpecification.Calibration FROM ECUsSpecification";
                             Query += "WHERE (ID = " + id1.ToString() + " OR ID = " + id2.ToString() + ") AND Len(" + ColLeng + ") > " + Leng.ToString() + " AS ColLen;";
@@ -1401,7 +1265,7 @@ namespace ProMap
                 case "ExistingEcus":
                     try
                     {
-                        using (OleDbConnection con = new OleDbConnection(connstr))
+                        using (OleDbConnection con = new OleDbConnection(connstr1))
                         {
                             Query = "SELECT ExistingEcus.ID, ExistingEcus.Specification_ID, ExistingEcus.Connection_ID, ExistingEcus.FileName, ExistingEcus.Comment FROM ExistingEcus";
                             Query += "WHERE (ID = " + id1.ToString() + " OR ID = " + id2.ToString() + ") AND Len(" + ColLeng + ") > " + Leng.ToString() + " AS ColLen;";
@@ -1424,7 +1288,7 @@ namespace ProMap
                 case "Protocols":
                     try
                     {
-                        using (OleDbConnection con = new OleDbConnection(connstr))
+                        using (OleDbConnection con = new OleDbConnection(connstr1))
                         {
                             Query = "SELECT Protocols.ID, Protocols.Name FROM Protocols";
                             Query += "WHERE (ID = " + id1.ToString() + " OR ID = " + id2.ToString() + ") AND Len(" + ColLeng + ") > " + Leng.ToString() + " AS ColLen;";
@@ -1447,7 +1311,7 @@ namespace ProMap
                 case "Connection":
                     try
                     {
-                        using (OleDbConnection con = new OleDbConnection(connstr))
+                        using (OleDbConnection con = new OleDbConnection(connstr1))
                         {
                             Query = "SELECT Connection.ID, Connection.Protocols_ID, Connection.Pin, Connection.Baudrate, Connection.Header, Connection.Start_Command, Connection.End_Command, Connection.Itteration_Command FROM Connection";
                             Query += "WHERE (ID = " + id1.ToString() + " OR ID = " + id2.ToString() + ") AND Len(" + ColLeng + ") > " + Leng.ToString() + " AS ColLen;";
@@ -1469,10 +1333,9 @@ namespace ProMap
 
             return dtECUs;
         }
-        public static DataTable ShowOnGridView(string tbName, string ColCont1, string Cont1, string ColCont2, string Cont2, string ColLeng, int Leng)
+        public static DataTable ShowOnGridView(String tbName, String ColCont1, String Cont1, String ColCont2, String Cont2, String ColLeng, int Leng)
         {
             DataTable dtECUs = new DataTable();
-            string connstr = ConfigurationManager.ConnectionStrings["ProMapAccessDB"].ConnectionString;
             string Query = "";
             switch (tbName)
             {
@@ -1480,7 +1343,7 @@ namespace ProMap
                 case "ECUsSpecification":
                     try
                     {
-                        using (OleDbConnection con = new OleDbConnection(connstr))
+                        using (OleDbConnection con = new OleDbConnection(connstr1))
                         {
                             Query = "SELECT ECUsSpecification.ID, ECUsSpecification.Manufacturer, ECUsSpecification.Type, ECUsSpecification.BootRef, ECUsSpecification.SoftRef, ECUsSpecification.Calibration FROM ECUsSpecification";
                             Query += "WHERE InStr(" + ColCont1 + ",'" + Cont1 + "') AND InStr(" + ColCont2 + ",'" + Cont2 + "') AND LEN(" + ColLeng + ") >" + Leng.ToString() + ";";
@@ -1503,7 +1366,7 @@ namespace ProMap
                 case "ExistingEcus":
                     try
                     {
-                        using (OleDbConnection con = new OleDbConnection(connstr))
+                        using (OleDbConnection con = new OleDbConnection(connstr1))
                         {
                             Query = "SELECT ExistingEcus.ID, ExistingEcus.Specification_ID, ExistingEcus.Connection_ID, ExistingEcus.FileName, ExistingEcus.Comment FROM ExistingEcus";
                             Query += "WHERE InStr(" + ColCont1 + ",'" + Cont1 + "') AND InStr(" + ColCont2 + ",'" + Cont2 + "') AND LEN(" + ColLeng + ") >" + Leng.ToString() + ";";
@@ -1526,7 +1389,7 @@ namespace ProMap
                 case "Protocols":
                     try
                     {
-                        using (OleDbConnection con = new OleDbConnection(connstr))
+                        using (OleDbConnection con = new OleDbConnection(connstr1))
                         {
                             Query = "SELECT Protocols.ID, Protocols.Name FROM Protocols";
                             Query += "WHERE InStr(" + ColCont1 + ",'" + Cont1 + "') AND InStr(" + ColCont2 + ",'" + Cont2 + "') AND LEN(" + ColLeng + ") >" + Leng.ToString() + ";";
@@ -1549,7 +1412,7 @@ namespace ProMap
                 case "Connection":
                     try
                     {
-                        using (OleDbConnection con = new OleDbConnection(connstr))
+                        using (OleDbConnection con = new OleDbConnection(connstr1))
                         {
                             Query = "SELECT Connection.ID, Connection.Protocols_ID, Connection.Pin, Connection.Baudrate, Connection.Header, Connection.Start_Command, Connection.End_Command, Connection.Itteration_Command FROM Connection";
                             Query += "WHERE InStr(" + ColCont1 + ",'" + Cont1 + "') AND InStr(" + ColCont2 + ",'" + Cont2 + "') AND LEN(" + ColLeng + ") >" + Leng.ToString() + ";";
@@ -1571,10 +1434,9 @@ namespace ProMap
 
             return dtECUs;
         }
-        public static DataTable ShowOnGridView(string tbName, string ColCont1, string Cont1, string ColCont2, string Cont2, string ColCont3, string Cont3, string ColLeng, int Leng)
+        public static DataTable ShowOnGridView(String tbName, String ColCont1, String Cont1, String ColCont2, String Cont2, String ColCont3, String Cont3, String ColLeng, int Leng)
         {
             DataTable dtECUs = new DataTable();
-            string connstr = ConfigurationManager.ConnectionStrings["ProMapAccessDB"].ConnectionString;
             string Query = "";
             switch (tbName)
             {
@@ -1582,7 +1444,7 @@ namespace ProMap
                 case "ECUsSpecification":
                     try
                     {
-                        using (OleDbConnection con = new OleDbConnection(connstr))
+                        using (OleDbConnection con = new OleDbConnection(connstr1))
                         {
                             Query = "SELECT ECUsSpecification.ID, ECUsSpecification.Manufacturer, ECUsSpecification.Type, ECUsSpecification.BootRef, ECUsSpecification.SoftRef, ECUsSpecification.Calibration FROM ECUsSpecification";
                             Query += "WHERE InStr(" + ColCont1 + ",'" + Cont1 + "') AND InStr(" + ColCont2 + ",'" + Cont2 + "') AND InStr(" + ColCont3 + ",'" + Cont3 + "') AND LEN(" + ColLeng + ") >" + Leng.ToString() + ";";
@@ -1605,7 +1467,7 @@ namespace ProMap
                 case "ExistingEcus":
                     try
                     {
-                        using (OleDbConnection con = new OleDbConnection(connstr))
+                        using (OleDbConnection con = new OleDbConnection(connstr1))
                         {
                             Query = "SELECT ExistingEcus.ID, ExistingEcus.Specification_ID, ExistingEcus.Connection_ID, ExistingEcus.FileName, ExistingEcus.Comment FROM ExistingEcus";
                             Query += "WHERE InStr(" + ColCont1 + ",'" + Cont1 + "') AND InStr(" + ColCont2 + ",'" + Cont2 + "') AND InStr(" + ColCont3 + ",'" + Cont3 + "') AND LEN(" + ColLeng + ") >" + Leng.ToString() + ";";
@@ -1628,7 +1490,7 @@ namespace ProMap
                 case "Protocols":
                     try
                     {
-                        using (OleDbConnection con = new OleDbConnection(connstr))
+                        using (OleDbConnection con = new OleDbConnection(connstr1))
                         {
                             Query = "SELECT Protocols.ID, Protocols.Name FROM Protocols";
                             Query += "WHERE InStr(" + ColCont1 + ",'" + Cont1 + "') AND InStr(" + ColCont2 + ",'" + Cont2 + "') AND InStr(" + ColCont3 + ",'" + Cont3 + "') AND LEN(" + ColLeng + ") >" + Leng.ToString() + ";";
@@ -1651,7 +1513,7 @@ namespace ProMap
                 case "Connection":
                     try
                     {
-                        using (OleDbConnection con = new OleDbConnection(connstr))
+                        using (OleDbConnection con = new OleDbConnection(connstr1))
                         {
                             Query = "SELECT Connection.ID, Connection.Protocols_ID, Connection.Pin, Connection.Baudrate, Connection.Header, Connection.Start_Command, Connection.End_Command, Connection.Itteration_Command FROM Connection";
                             Query += "WHERE InStr(" + ColCont1 + ",'" + Cont1 + "') AND InStr(" + ColCont2 + ",'" + Cont2 + "') AND InStr(" + ColCont3 + ",'" + Cont3 + "') AND LEN(" + ColLeng + ") >" + Leng.ToString() + ";";
@@ -1673,20 +1535,19 @@ namespace ProMap
 
             return dtECUs;
         }
-        public static DataTable ShowOnGridView(string tbName, string Col, int[] SearchList)
+        public static DataTable ShowOnGridView(String tbName, String Col, int[] SearchList)
         {
             DataTable dtECUs = new DataTable();
-            string connstr = ConfigurationManager.ConnectionStrings["ProMapAccessDB"].ConnectionString;
             string Query = "";
             int Leng = SearchList.Count();
-
+            
             switch (tbName)
             {
                 // Show ECUsSpecification In Datagridview
                 case "ECUsSpecification":
                     try
                     {
-                        using (OleDbConnection con = new OleDbConnection(connstr))
+                        using (OleDbConnection con = new OleDbConnection(connstr1))
                         {
                             for (int i = 0; i < Leng; i++)
                             {
@@ -1712,7 +1573,7 @@ namespace ProMap
                 case "ExistingEcus":
                     try
                     {
-                        using (OleDbConnection con = new OleDbConnection(connstr))
+                        using (OleDbConnection con = new OleDbConnection(connstr1))
                         {
                             for (int i = 0; i < Leng; i++)
                             {
@@ -1738,7 +1599,7 @@ namespace ProMap
                 case "Protocols":
                     try
                     {
-                        using (OleDbConnection con = new OleDbConnection(connstr))
+                        using (OleDbConnection con = new OleDbConnection(connstr1))
                         {
                             for (int i = 0; i < Leng; i++)
                             {
@@ -1764,7 +1625,7 @@ namespace ProMap
                 case "Connection":
                     try
                     {
-                        using (OleDbConnection con = new OleDbConnection(connstr))
+                        using (OleDbConnection con = new OleDbConnection(connstr1))
                         {
                             for (int i = 0; i < Leng; i++)
                             {
@@ -1791,15 +1652,14 @@ namespace ProMap
         }
 
         // Read Data From 2 Joined Tables
-        public static string[] ReadFromESJoinEE(string ES_Col, string EE_Col)
+        public static String[] ReadFromJoinedTables(String Table1, String Table2, String ES_Col, String EE_Col)
         {
-            string connstr = ConfigurationManager.ConnectionStrings["ProMapAccessDB"].ConnectionString;
             string Query = "";
             string[] Record = new string[7];
 
-            Query = "SELECT * FROM ECUsSpecification INNER JOIN ExistingEcus ON ECUsSpecification.[" + ES_Col + "] = ExistingEcus.[" + EE_Col + "];";
+            Query = "SELECT * FROM " + Table1 + " INNER JOIN " + Table2 + " ON ECUsSpecification.[" + ES_Col + "] = ExistingEcus.[" + EE_Col + "];";
 
-            using (OleDbConnection con = new OleDbConnection(connstr))
+            using (OleDbConnection con = new OleDbConnection(connstr1))
             {
                 using (OleDbCommand cmd = new OleDbCommand(Query, con))
                 {
@@ -1820,5 +1680,6 @@ namespace ProMap
             }
             return Record;
         }
+
     }
 }
