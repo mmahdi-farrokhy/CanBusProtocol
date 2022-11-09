@@ -11,11 +11,12 @@ It converts the commands received from ECU into standard CAN format.
 -----------------------------------------------------------------------
 DataBaseConnection class:
 The required data to work with is stored in a MS Access Database and
-this class connects to yhe database and reads the data from it.
+this class connects to the database and reads the data from it.
+
+** You can use this class if you're attempting to use MS Access Database
+in a C# Project **
 -----------------------------------------------------------------------
 DumpConnection class:
 To send data commands of ECU Downloading procedure, first we need to
 read the data commands from a .bin(Dump) file and return in into the
 code. This class does so.
-** You can use this class if you're attempting to use MS Access Database
-in a C# Project **
