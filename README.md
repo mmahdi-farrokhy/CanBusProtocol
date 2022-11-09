@@ -17,5 +17,5 @@ DumpConnection class:
 To send data commands of ECU Downloading procedure, first we need to
 read the data commands from a .bin(Dump) file and return in into the
 code. This class does so.
-* You can use this class if you're attempting to use MS Access Database
-in a C# Project *
+** You can use this class if you're attempting to use MS Access Database
+in a C# Project **
