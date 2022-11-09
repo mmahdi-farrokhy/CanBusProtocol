@@ -13,7 +13,7 @@ DataBaseConnection class:
 The required data to work with is stored in a MS Access Database and
 this class connects to the database and reads the data from it.
 
-** You can use this class if you're attempting to use MS Access Database
+** You can use this class if you're attempting to use MS Access(or any other RDBMS) Database
 in a C# Project and modify it as your requirements **
 -----------------------------------------------------------------------
 DumpConnection class:
