@@ -14,7 +14,7 @@ The required data to work with is stored in a MS Access Database and
 this class connects to the database and reads the data from it.
 
 ** You can use this class if you're attempting to use MS Access Database
-in a C# Project **
+in a C# Project and modify it as your requirements **
 -----------------------------------------------------------------------
 DumpConnection class:
 To send data commands of ECU Downloading procedure, first we need to
