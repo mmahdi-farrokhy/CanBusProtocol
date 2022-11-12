@@ -973,67 +973,73 @@ namespace ProMap
         }
 
         // Add Mew Item To The Given Table
-        public static bool InsertToDatabase(String tbName, String[] New_Record)
+        public static bool InsertToTable(ECUsSpecification New_Record)
         {
             bool isAdded = false;
             OleDbConnection dbcon = new OleDbConnection(connstr1);
 
-            switch (tbName)
+            try
             {
-                case "ECUsSpecification":
-                    try
-                    {
-                        OleDbCommand cmd = dbcon.CreateCommand();
-                        dbcon.Open();
-                        cmd.CommandText = "INSERT INTO ECUsSpecification([Manufacturer] , [Type], [BootRef], [SoftRef], [Calibration], [ProductNumber], [HardwareCode], [Comment]) VALUES('" + New_Record[0] + "','" + New_Record[1] + "','" + New_Record[2] + "','" + New_Record[3] + "','" + New_Record[4] + "','" + New_Record[5] + "','" + New_Record[6] + "','" + New_Record[7] + "');";
-                        cmd.Connection = dbcon;
-                        cmd.ExecuteNonQuery();
-                        MessageBox.Show("ECU Inserted", "Done!");
-                        dbcon.Close();
-                        isAdded = true;
-                    }
-                    catch (Exception ex)
-                    {
-                        MessageBox.Show("Insert Error:" + ex.Message);
-                    }
-                    break;
-
-                case "ExistingEcus":
-                    try
-                    {
-                        OleDbCommand cmd = dbcon.CreateCommand();
-                        dbcon.Open();
-                        cmd.CommandText = "INSERT INTO ExistingEcus([Specification_ID] , [Connection_ID], [FileName], [Comment]) VALUES(" + New_Record[0] + "," + New_Record[1] + ",'" + New_Record[2] + "','" + New_Record[3] + "');";
-                        cmd.Connection = dbcon;
-                        cmd.ExecuteNonQuery();
-                        MessageBox.Show("ECU Inserted", "Done!");
-                        dbcon.Close();
-                        isAdded = true;
-                    }
-                    catch (Exception ex)
-                    {
-                        MessageBox.Show("Insert Error:" + ex.Message);
-                    }
-                    break;
-
-                case "History":
-                    try
-                    {
-                        OleDbCommand cmd = dbcon.CreateCommand();
-                        dbcon.Open();
-                        cmd.CommandText = "INSERT INTO History([SpecificationID]) VALUES('" + New_Record[0] + "');";
-                        cmd.Connection = dbcon;
-                        cmd.ExecuteNonQuery();
-                        MessageBox.Show("History Inserted", "Done!");
-                        dbcon.Close();
-                        isAdded = true;
-                    }
-                    catch (Exception ex)
-                    {
-                        MessageBox.Show("Insert Error:" + ex.Message);
-                    }
-                    break;
+                OleDbCommand cmd = dbcon.CreateCommand();
+                dbcon.Open();
+                cmd.CommandText = "INSERT INTO ECUsSpecification([Manufacturer] , [Type], [BootRef], [SoftRef], [Calibration], [ProductNumber], [HardwareCode], [Comment]) VALUES('" + New_Record.Manufacturer + "','" + New_Record.Type + "','" + New_Record.BootRef + "','" + New_Record.SoftRef + "','" + New_Record.Calibration + "','" + New_Record.ProductNumber + "','" + New_Record.HardwareCode + "','" + New_Record.Comment + "');";
+                cmd.Connection = dbcon;
+                cmd.ExecuteNonQuery();
+                MessageBox.Show("ECU Inserted", "Done!");
+                dbcon.Close();
+                isAdded = true;
             }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Insert Error:" + ex.Message);
+            }
+
+            return isAdded;
+        }
+        public static bool InsertToTable(ExistingEcu New_Record)
+        {
+            bool isAdded = false;
+            OleDbConnection dbcon = new OleDbConnection(connstr1);
+
+            try
+            {
+                OleDbCommand cmd = dbcon.CreateCommand();
+                dbcon.Open();
+                cmd.CommandText = "INSERT INTO ExistingEcus([Specification_ID] , [Connection_ID], [FileName], [Comment]) VALUES(" + New_Record.Specification_ID + "," + New_Record.Connection_ID + ",'" + New_Record.FileName + "','" + New_Record.Comment + "');";
+                cmd.Connection = dbcon;
+                cmd.ExecuteNonQuery();
+                MessageBox.Show("ECU Inserted", "Done!");
+                dbcon.Close();
+                isAdded = true;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Insert Error:" + ex.Message);
+            }
+
+            return isAdded;
+        }
+        public static bool InsertToTable(History New_Record)
+        {
+            bool isAdded = false;
+            OleDbConnection dbcon = new OleDbConnection(connstr1);
+
+            try
+            {
+                OleDbCommand cmd = dbcon.CreateCommand();
+                dbcon.Open();
+                cmd.CommandText = "INSERT INTO History([SpecificationID]) VALUES('" + New_Record.SpecificationID + "');";
+                cmd.Connection = dbcon;
+                cmd.ExecuteNonQuery();
+                MessageBox.Show("History Inserted", "Done!");
+                dbcon.Close();
+                isAdded = true;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Insert Error:" + ex.Message);
+            }
+
             return isAdded;
         }
 
@@ -1679,7 +1685,6 @@ namespace ProMap
                 }
             }
             return Record;
-        }
-
+        }        
     }
 }
