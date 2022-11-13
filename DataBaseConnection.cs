@@ -13,7 +13,6 @@ namespace ProMap
     class DataBaseConnection
     {
         private static String connstr1 = ConfigurationManager.ConnectionStrings["ProMapAccessDB"].ConnectionString;
-        private static String connstr2 = "Provider=Microsoft.Jet.OLEDB.4.0; Data Source = E:/User/work/Remap/source - Developing/ProMap 20190911(Ver 1)- Source/67 ProMap 991107 zarvan v5.2.0/ProMap/PromapDatabase.mdb";
         private static String Query = "";
 
         // FirstOrDefault
@@ -315,13 +314,14 @@ namespace ProMap
         public static bool DeleteFromTable(String tbName, int DeleteID)
         {
             bool isDeleted = false;
-            OleDbConnection dbcon = new OleDbConnection(connstr2);
+            OleDbConnection dbcon = new OleDbConnection(connstr1);
+            Query = "DELETE FROM " + tbName + " WHERE ID = " + DeleteID.ToString();
 
             try
             {
                 OleDbCommand cmd = dbcon.CreateCommand();
                 dbcon.Open();
-                cmd.CommandText = "DELETE FROM " + tbName + " WHERE ID = " + DeleteID.ToString();
+                cmd.CommandText = Query;
                 cmd.Connection = dbcon;
                 cmd.ExecuteNonQuery();
                 dbcon.Close();
@@ -339,34 +339,34 @@ namespace ProMap
         public static bool UpdateTable(ECUsSpecification New_Value)
         {
             bool isUpdated = false;
-            OleDbConnection dbcon = new OleDbConnection(connstr2);
+            OleDbConnection dbcon = new OleDbConnection(connstr1);
+            Query = "UPDATE ECUsSpecification SET " +
+                    "Manufacturer ='" + New_Value.Manufacturer +
+                    "' ,DeviceName ='" + New_Value.DeviceName +
+                    "' ,Type ='" + New_Value.Type +
+                    "' ,BootRef ='" + New_Value.BootRef +
+                    "' ,SoftRef ='" + New_Value.SoftRef +
+                    "' ,Calibration ='" + New_Value.Calibration +
+                    "' ,BinFileName ='" + New_Value.BinFileName +
+                    "' ,BaudRate ='" + New_Value.BaudRate +
+                    "' ,CRC_Address ='" + New_Value.CRC_Address +
+                    "' ,ConnectionID =" + New_Value.ConnectionID +
+                    " ,Type1_AddressRemap ='" + New_Value.Type1_AddressRemap +
+                    "' ,Type2_TableRemap ='" + New_Value.Type2_TableRemap +
+                    "' ,ProductNumber ='" + New_Value.ProductNumber +
+                    "' ,HardwareCode ='" + New_Value.HardwareCode +
+                    "' ,Comment ='" + New_Value.Comment +
+                    "' ,UserID =" + New_Value.UserID +
+                    " ,type1Cryption ='" + New_Value.type1Cryption +
+                    "' ,binCryption = '" + New_Value.binCryption +
+                    "' ,crcCryption = '" + New_Value.crcCryption +
+                    "' WHERE ID = " + New_Value.ID;
 
             try
             {
                 OleDbCommand cmd = dbcon.CreateCommand();
                 dbcon.Open();
-                cmd.CommandText = "UPDATE ECUsSpecification SET " +
-                "Manufacturer ='" + New_Value.Manufacturer +
-                "' ,DeviceName ='" + New_Value.DeviceName +
-                "' ,Type ='" + New_Value.Type +
-                "' ,BootRef ='" + New_Value.BootRef +
-                "' ,SoftRef ='" + New_Value.SoftRef +
-                "' ,Calibration ='" + New_Value.Calibration +
-                "' ,BinFileName ='" + New_Value.BinFileName +
-                "' ,BaudRate ='" + New_Value.BaudRate +
-                "' ,CRC_Address ='" + New_Value.CRC_Address +
-                "' ,ConnectionID =" + New_Value.ConnectionID +
-                " ,Type1_AddressRemap ='" + New_Value.Type1_AddressRemap +
-                "' ,Type2_TableRemap ='" + New_Value.Type2_TableRemap +
-                "' ,ProductNumber ='" + New_Value.ProductNumber +
-                "' ,HardwareCode ='" + New_Value.HardwareCode +
-                "' ,Comment ='" + New_Value.Comment +
-                "' ,UserID =" + New_Value.UserID +
-                " ,type1Cryption ='" + New_Value.type1Cryption +
-                "' ,binCryption = '" + New_Value.binCryption +
-                "' ,crcCryption = '" + New_Value.crcCryption +
-                "' WHERE ID = " + New_Value.ID;
-
+                cmd.CommandText = Query;
                 cmd.Connection = dbcon;
                 cmd.ExecuteNonQuery();
                 dbcon.Close();
@@ -383,18 +383,18 @@ namespace ProMap
         {
             bool isUpdated = false;
             OleDbConnection dbcon = new OleDbConnection(connstr1);
+            Query = "UPDATE ExistingEcus SET " +
+                    "Specification_ID ='" + New_Value.Specification_ID +
+                    "Connection_ID ='" + New_Value.Connection_ID +
+                    "FileName ='" + New_Value.FileName +
+                    "Comment ='" + New_Value.Comment +
+                    "' WHERE ID = " + New_Value.ID;
 
             try
             {
                 OleDbCommand cmd = dbcon.CreateCommand();
                 dbcon.Open();
-                cmd.CommandText = "UPDATE ExistingEcus SET " +
-                "Specification_ID ='" + New_Value.Specification_ID +
-                "Connection_ID ='" + New_Value.Connection_ID +
-                "FileName ='" + New_Value.FileName +
-                "Comment ='" + New_Value.Comment +
-                "' WHERE ID = " + New_Value.ID;
-
+                cmd.CommandText = Query;
                 cmd.Connection = dbcon;
                 cmd.ExecuteNonQuery();
                 dbcon.Close();
@@ -411,15 +411,15 @@ namespace ProMap
         {
             bool isUpdated = false;
             OleDbConnection dbcon = new OleDbConnection(connstr1);
+            Query = "UPDATE DefaultLanguage SET " +
+                    "lang ='" + New_Value.lang +
+                    "' WHERE ID = " + New_Value.ID;
 
             try
             {
                 OleDbCommand cmd = dbcon.CreateCommand();
                 dbcon.Open();
-                cmd.CommandText = "UPDATE DefaultLanguage SET " +
-                "lang ='" + New_Value.lang +
-                "' WHERE ID = " + New_Value.ID;
-
+                cmd.CommandText = Query;
                 cmd.Connection = dbcon;
                 cmd.ExecuteNonQuery();
                 dbcon.Close();
@@ -436,15 +436,15 @@ namespace ProMap
         {
             bool isUpdated = false;
             OleDbConnection dbcon = new OleDbConnection(connstr1);
+            Query = "UPDATE History SET " +
+                    "SpecificationID ='" + New_Value.SpecificationID +
+                    "' WHERE ID = " + New_Value.ID;
 
             try
             {
                 OleDbCommand cmd = dbcon.CreateCommand();
                 dbcon.Open();
-                cmd.CommandText = "UPDATE History SET " +
-                "SpecificationID ='" + New_Value.SpecificationID +
-                "' WHERE ID = " + New_Value.ID;
-
+                cmd.CommandText = Query;
                 cmd.Connection = dbcon;
                 cmd.ExecuteNonQuery();
                 dbcon.Close();
@@ -478,7 +478,7 @@ namespace ProMap
         }
         public static int CountInTable(String tbName, int CountID)
         {
-            int NumberOfECUs = 0;
+            int NumberOfRecords = 0;
             Query = "SELECT COUNT(*) AS NumberOfECUs FROM " + tbName + " WHERE ID = " + CountID.ToString() + "';";
 
             using (OleDbConnection con = new OleDbConnection(connstr1))
@@ -486,16 +486,16 @@ namespace ProMap
                 using (OleDbCommand cmd = new OleDbCommand(Query, con))
                 {
                     con.Open();
-                    NumberOfECUs = (int)cmd.ExecuteScalar();
+                    NumberOfRecords = (int)cmd.ExecuteScalar();
                     con.Close();
                 }
             }
 
-            return NumberOfECUs;
+            return NumberOfRecords;
         }
         public static int CountInTable(String tbName, String Col, String ColValue)
         {
-            int NumberOfECUs = 0;
+            int NumberOfRecords = 0;
             Query = "SELECT COUNT(*) AS NumberOfECUs FROM " + tbName + " WHERE " + Col + " = '" + ColValue + "';";
 
             using (OleDbConnection con = new OleDbConnection(connstr1))
@@ -503,16 +503,16 @@ namespace ProMap
                 using (OleDbCommand cmd = new OleDbCommand(Query, con))
                 {
                     con.Open();
-                    NumberOfECUs = (int)cmd.ExecuteScalar();
+                    NumberOfRecords = (int)cmd.ExecuteScalar();
                     con.Close();
                 }
             }
 
-            return NumberOfECUs;
+            return NumberOfRecords;
         }
         public static int CountInTable(String tbName, String Col, int Leng, int id)
         {
-            int NumberOfECUs = 0;
+            int NumberOfRecords = 0;
             Query = "SELECT COUNT(*) AS NumberOfECUs FROM " + tbName + " WHERE ID = " + id.ToString() + "AND LEN(" + Col + ") > " + Leng.ToString() + ";";
 
             using (OleDbConnection con = new OleDbConnection(connstr1))
@@ -520,16 +520,16 @@ namespace ProMap
                 using (OleDbCommand cmd = new OleDbCommand(Query, con))
                 {
                     con.Open();
-                    NumberOfECUs = (int)cmd.ExecuteScalar();
+                    NumberOfRecords = (int)cmd.ExecuteScalar();
                     con.Close();
                 }
             }
 
-            return NumberOfECUs;
+            return NumberOfRecords;
         }
         public static int CountInTable(String tbName, String Col, int Leng, int id1, int id2)
         {
-            int NumberOfECUs = 0;
+            int NumberOfRecords = 0;
             string Query = "SELECT COUNT(*) AS NumberOfECUs FROM " + tbName + " WHERE (ID = " + id1.ToString() + " OR ID = " + id2.ToString() + ") AND Len(" + Col + ") > " + Leng.ToString() + " AS ColLen;";
 
             using (OleDbConnection con = new OleDbConnection(connstr1))
@@ -537,16 +537,16 @@ namespace ProMap
                 using (OleDbCommand cmd = new OleDbCommand(Query, con))
                 {
                     con.Open();
-                    NumberOfECUs = (int)cmd.ExecuteScalar();
+                    NumberOfRecords = (int)cmd.ExecuteScalar();
                     con.Close();
                 }
             }
 
-            return NumberOfECUs;
+            return NumberOfRecords;
         }
         public static int CountInTable(String tbName, int id1, int id2, int id3, int id4)
         {
-            int NumberOfECUs = 0;
+            int NumberOfRecords = 0;
             string Query = "SELECT COUNT(*) AS NumberOfECUs FROM " + tbName + " WHERE ID = " + id1.ToString() + " OR ID = " + id2.ToString() + " OR ID = " + id3.ToString() + " OR ID = " + id4.ToString() + ";";
 
             using (OleDbConnection con = new OleDbConnection(connstr1))
@@ -554,16 +554,16 @@ namespace ProMap
                 using (OleDbCommand cmd = new OleDbCommand(Query, con))
                 {
                     con.Open();
-                    NumberOfECUs = (int)cmd.ExecuteScalar();
+                    NumberOfRecords = (int)cmd.ExecuteScalar();
                     con.Close();
                 }
             }
 
-            return NumberOfECUs;
+            return NumberOfRecords;
         }
         public static int CountInTable(String tbName, String Col, Dictionary<int, String> SearchList)
         {
-            int NumberOfECUs = 0;
+            int NumberOfRecords = 0;
             int Leng = SearchList.Count;
 
 
@@ -575,17 +575,17 @@ namespace ProMap
                     using (OleDbCommand cmd = new OleDbCommand(Query, con))
                     {
                         con.Open();
-                        NumberOfECUs = (int)cmd.ExecuteScalar();
+                        NumberOfRecords = (int)cmd.ExecuteScalar();
                         con.Close();
                     }
                 }
             }
 
-            return NumberOfECUs;
+            return NumberOfRecords;
         }
         public static int CountInTable(String tbName, String ColCont1, String Cont1, String ColCont2, String Cont2, String ColLeng, int Leng)
         {
-            int NumberOfECUs = 0;
+            int NumberOfRecords = 0;
             string Query = "SELECT COUNT(*) AS NumberOfECUs FROM " + tbName + " WHERE InStr(" + ColCont1 + ",'" + Cont1 + "') AND InStr(" + ColCont2 + ",'" + Cont2 + "') AND LEN(" + ColLeng + ") >" + Leng.ToString() + ";";
 
             using (OleDbConnection con = new OleDbConnection(connstr1))
@@ -593,12 +593,12 @@ namespace ProMap
                 using (OleDbCommand cmd = new OleDbCommand(Query, con))
                 {
                     con.Open();
-                    NumberOfECUs = (int)cmd.ExecuteScalar();
+                    NumberOfRecords = (int)cmd.ExecuteScalar();
                     con.Close();
                 }
             }
 
-            return NumberOfECUs;
+            return NumberOfRecords;
         }
 
         // GetData
@@ -977,12 +977,19 @@ namespace ProMap
         {
             bool isAdded = false;
             OleDbConnection dbcon = new OleDbConnection(connstr1);
+            Query = "INSERT INTO ECUsSpecification([Manufacturer] " +
+                    ", [Type], [BootRef], [SoftRef], [Calibration], " +
+                    " [ProductNumber], [HardwareCode], [Comment]) VALUES('" +
+                    New_Record.Manufacturer + "','" + New_Record.Type + "','" +
+                    New_Record.BootRef + "','" + New_Record.SoftRef + "','" +
+                    New_Record.Calibration + "','" + New_Record.ProductNumber +
+                    "','" + New_Record.HardwareCode + "','" + New_Record.Comment + "');";
 
             try
             {
                 OleDbCommand cmd = dbcon.CreateCommand();
                 dbcon.Open();
-                cmd.CommandText = "INSERT INTO ECUsSpecification([Manufacturer] , [Type], [BootRef], [SoftRef], [Calibration], [ProductNumber], [HardwareCode], [Comment]) VALUES('" + New_Record.Manufacturer + "','" + New_Record.Type + "','" + New_Record.BootRef + "','" + New_Record.SoftRef + "','" + New_Record.Calibration + "','" + New_Record.ProductNumber + "','" + New_Record.HardwareCode + "','" + New_Record.Comment + "');";
+                cmd.CommandText = Query;
                 cmd.Connection = dbcon;
                 cmd.ExecuteNonQuery();
                 MessageBox.Show("ECU Inserted", "Done!");
@@ -1000,12 +1007,16 @@ namespace ProMap
         {
             bool isAdded = false;
             OleDbConnection dbcon = new OleDbConnection(connstr1);
+            Query = "INSERT INTO ExistingEcus([Specification_ID] , " +
+                "[Connection_ID], [FileName], [Comment]) VALUES(" +
+                New_Record.Specification_ID + "," + New_Record.Connection_ID +
+                ",'" + New_Record.FileName + "','" + New_Record.Comment + "');";
 
             try
             {
                 OleDbCommand cmd = dbcon.CreateCommand();
                 dbcon.Open();
-                cmd.CommandText = "INSERT INTO ExistingEcus([Specification_ID] , [Connection_ID], [FileName], [Comment]) VALUES(" + New_Record.Specification_ID + "," + New_Record.Connection_ID + ",'" + New_Record.FileName + "','" + New_Record.Comment + "');";
+                cmd.CommandText = Query;
                 cmd.Connection = dbcon;
                 cmd.ExecuteNonQuery();
                 MessageBox.Show("ECU Inserted", "Done!");
@@ -1023,12 +1034,14 @@ namespace ProMap
         {
             bool isAdded = false;
             OleDbConnection dbcon = new OleDbConnection(connstr1);
+            Query = "INSERT INTO History([SpecificationID]) VALUES('" +
+                    New_Record.SpecificationID + "');";
 
             try
             {
                 OleDbCommand cmd = dbcon.CreateCommand();
                 dbcon.Open();
-                cmd.CommandText = "INSERT INTO History([SpecificationID]) VALUES('" + New_Record.SpecificationID + "');";
+                cmd.CommandText = Query;
                 cmd.Connection = dbcon;
                 cmd.ExecuteNonQuery();
                 MessageBox.Show("History Inserted", "Done!");
@@ -1044,626 +1057,664 @@ namespace ProMap
         }
 
         // Read From Database Tables And Show On Datagirdview
-        public static DataTable ShowOnGridView(String tbName)
+        public static DataTable ShowOnGridView(ECUsSpecification ES)
         {
-            DataTable dtECUs = new DataTable();
-               
-            switch (tbName)
+            DataTable Records = new DataTable();
+            Query = "SELECT ECUsSpecification.ID, ECUsSpecification.Manufacturer, " +
+                    "ECUsSpecification.Type, ECUsSpecification.BootRef, ECUsSpecification.SoftRef, " + 
+                    "ECUsSpecification.Calibration FROM ECUsSpecification";
+
+            try
             {
-                // Show ECUsSpecification In Datagridview
-                case "ECUsSpecification":
-                    try
+                using (OleDbConnection con = new OleDbConnection(connstr1))
+                {
+                    using (OleDbCommand cmd = new OleDbCommand(Query, con))
                     {
-                        using (OleDbConnection con = new OleDbConnection(connstr1))
-                        {
-                            using (OleDbCommand cmd = new OleDbCommand("SELECT ECUsSpecification.ID, ECUsSpecification.Manufacturer, ECUsSpecification.Type, ECUsSpecification.BootRef, ECUsSpecification.SoftRef, ECUsSpecification.Calibration FROM ECUsSpecification", con))
-                            {
-                                con.Open();
-                                OleDbDataReader reader = cmd.ExecuteReader();
-                                dtECUs.Load(reader);
-                                con.Close();
-                            }
-                        }
+                        con.Open();
+                        OleDbDataReader reader = cmd.ExecuteReader();
+                        Records.Load(reader);
+                        con.Close();
                     }
-                    catch (Exception ex)
-                    {
-                        MessageBox.Show("Read Error:" + ex.Message);
-                    }
-                    break;
-
-                // Show ExistingEcus In Datagridview
-                case "ExistingEcus":
-                    try
-                    {
-                        using (OleDbConnection con = new OleDbConnection(connstr1))
-                        {
-                            using (OleDbCommand cmd = new OleDbCommand("SELECT ExistingEcus.ID, ExistingEcus.Specification_ID, ExistingEcus.Connection_ID, ExistingEcus.FileName, ExistingEcus.Comment FROM ExistingEcus", con))
-                            {
-                                con.Open();
-                                OleDbDataReader reader = cmd.ExecuteReader();
-                                dtECUs.Load(reader);
-                                con.Close();
-                            }
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-                        MessageBox.Show("Read Error:" + ex.Message);
-                    }
-                    break;
-
-                // Show Protocols In Datagridview
-                case "Protocols":
-                    try
-                    {
-                        using (OleDbConnection con = new OleDbConnection(connstr1))
-                        {
-                            using (OleDbCommand cmd = new OleDbCommand("SELECT Protocols.ID, Protocols.Name FROM Protocols", con))
-                            {
-                                con.Open();
-                                OleDbDataReader reader = cmd.ExecuteReader();
-                                dtECUs.Load(reader);
-                                con.Close();
-                            }
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-                        MessageBox.Show("Read Error:" + ex.Message);
-                    }
-                    break;
-
-                // Show Connection In Datagridview
-                case "Connection":
-                    try
-                    {
-                        using (OleDbConnection con = new OleDbConnection(connstr1))
-                        {
-                            using (OleDbCommand cmd = new OleDbCommand("SELECT Connection.ID, Connection.Protocols_ID, Connection.Pin, Connection.Baudrate, Connection.Header, Connection.Start_Command, Connection.End_Command, Connection.Itteration_Command FROM Connection", con))
-                            {
-                                con.Open();
-                                OleDbDataReader reader = cmd.ExecuteReader();
-                                dtECUs.Load(reader);
-                                con.Close();
-                            }
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-                        MessageBox.Show("Read Error:" + ex.Message);
-                    }
-                    break;
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Read Error:" + ex.Message);
             }
 
-            return dtECUs;
+            return Records;
         }
-        public static DataTable ShowOnGridView(String tbName, String ColCont, String Cont, String ColLeng, int Leng)
+        public static DataTable ShowOnGridView(ExistingEcu EE)
         {
-            DataTable dtECUs = new DataTable();
-            string Query = "";
-            switch (tbName)
+            DataTable Records = new DataTable();
+            Query = "SELECT ExistingEcus.ID, ExistingEcus.Specification_ID, " + 
+                    "ExistingEcus.Connection_ID, ExistingEcus.FileName, " + 
+                    "ExistingEcus.Comment FROM ExistingEcus";
+
+            try
             {
-                // Show ECUsSpecification In Datagridview
-                case "ECUsSpecification":
-                    try
+                using (OleDbConnection con = new OleDbConnection(connstr1))
+                {
+                    using (OleDbCommand cmd = new OleDbCommand(Query, con))
                     {
-                        using (OleDbConnection con = new OleDbConnection(connstr1))
-                        {
-                            Query = "SELECT ECUsSpecification.ID, ECUsSpecification.Manufacturer, ECUsSpecification.Type, ECUsSpecification.BootRef, ECUsSpecification.SoftRef, ECUsSpecification.Calibration FROM ECUsSpecification";
-                            Query += "WHERE InStr(" + ColCont + ",'" + Cont + "') AND LEN(" + ColLeng + ") > " + Leng.ToString() + ";";
-                            using (OleDbCommand cmd = new OleDbCommand(Query, con))
-                            {
-                                con.Open();
-                                OleDbDataReader reader = cmd.ExecuteReader();
-                                dtECUs.Load(reader);
-                                con.Close();
-                            }
-                        }
+                        con.Open();
+                        OleDbDataReader reader = cmd.ExecuteReader();
+                        Records.Load(reader);
+                        con.Close();
                     }
-                    catch (Exception ex)
-                    {
-                        MessageBox.Show("Read Error:" + ex.Message);
-                    }
-                    break;
-
-                // Show ExistingEcus In Datagridview
-                case "ExistingEcus":
-                    try
-                    {
-                        using (OleDbConnection con = new OleDbConnection(connstr1))
-                        {
-                            Query = "SELECT ExistingEcus.ID, ExistingEcus.Specification_ID, ExistingEcus.Connection_ID, ExistingEcus.FileName, ExistingEcus.Comment FROM ExistingEcus";
-                            Query += "WHERE InStr(" + ColCont + ",'" + Cont + "') AND LEN(" + ColLeng + ") > 0;";
-                            using (OleDbCommand cmd = new OleDbCommand(Query, con))
-                            {
-                                con.Open();
-                                OleDbDataReader reader = cmd.ExecuteReader();
-                                dtECUs.Load(reader);
-                                con.Close();
-                            }
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-                        MessageBox.Show("Read Error:" + ex.Message);
-                    }
-                    break;
-
-                // Show Protocols In Datagridview
-                case "Protocols":
-                    try
-                    {
-                        using (OleDbConnection con = new OleDbConnection(connstr1))
-                        {
-                            Query = "SELECT Protocols.ID, Protocols.Name FROM Protocols";
-                            Query += "WHERE InStr(" + ColCont + ",'" + Cont + "') AND LEN(" + ColLeng + ") > 0;";
-                            using (OleDbCommand cmd = new OleDbCommand(Query, con))
-                            {
-                                con.Open();
-                                OleDbDataReader reader = cmd.ExecuteReader();
-                                dtECUs.Load(reader);
-                                con.Close();
-                            }
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-                        MessageBox.Show("Read Error:" + ex.Message);
-                    }
-                    break;
-
-                // Show Connection In Datagridview
-                case "Connection":
-                    try
-                    {
-                        using (OleDbConnection con = new OleDbConnection(connstr1))
-                        {
-                            Query = "SELECT Connection.ID, Connection.Protocols_ID, Connection.Pin, Connection.Baudrate, Connection.Header, Connection.Start_Command, Connection.End_Command, Connection.Itteration_Command FROM Connection";
-                            Query += "WHERE InStr(" + ColCont + ",'" + Cont + "') AND LEN(" + ColLeng + ") > 0;";
-                            using (OleDbCommand cmd = new OleDbCommand(Query, con))
-                            {
-                                con.Open();
-                                OleDbDataReader reader = cmd.ExecuteReader();
-                                dtECUs.Load(reader);
-                                con.Close();
-                            }
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-                        MessageBox.Show("Read Error:" + ex.Message);
-                    }
-                    break;
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Read Error:" + ex.Message);
             }
 
-            return dtECUs;
+            return Records;
         }
-        public static DataTable ShowOnGridView(String tbName, String ColLeng, int Leng, int id1, int id2)
+        public static DataTable ShowOnGridView(Protocol P)
         {
-            DataTable dtECUs = new DataTable();
-            string Query = "";
-            switch (tbName)
+            DataTable Records = new DataTable();
+            Query = "SELECT Protocols.ID, Protocols.Name FROM Protocols";
+
+            try
             {
-                // Show ECUsSpecification In Datagridview
-                case "ECUsSpecification":
-                    try
+                using (OleDbConnection con = new OleDbConnection(connstr1))
+                {
+                    using (OleDbCommand cmd = new OleDbCommand(Query, con))
                     {
-                        using (OleDbConnection con = new OleDbConnection(connstr1))
-                        {
-                            Query = "SELECT ECUsSpecification.ID, ECUsSpecification.Manufacturer, ECUsSpecification.Type, ECUsSpecification.BootRef, ECUsSpecification.SoftRef, ECUsSpecification.Calibration FROM ECUsSpecification";
-                            Query += "WHERE (ID = " + id1.ToString() + " OR ID = " + id2.ToString() + ") AND Len(" + ColLeng + ") > " + Leng.ToString() + " AS ColLen;";
-                            using (OleDbCommand cmd = new OleDbCommand(Query, con))
-                            {
-                                con.Open();
-                                OleDbDataReader reader = cmd.ExecuteReader();
-                                dtECUs.Load(reader);
-                                con.Close();
-                            }
-                        }
+                        con.Open();
+                        OleDbDataReader reader = cmd.ExecuteReader();
+                        Records.Load(reader);
+                        con.Close();
                     }
-                    catch (Exception ex)
-                    {
-                        MessageBox.Show("Read Error:" + ex.Message);
-                    }
-                    break;
-
-                // Show ExistingEcus In Datagridview
-                case "ExistingEcus":
-                    try
-                    {
-                        using (OleDbConnection con = new OleDbConnection(connstr1))
-                        {
-                            Query = "SELECT ExistingEcus.ID, ExistingEcus.Specification_ID, ExistingEcus.Connection_ID, ExistingEcus.FileName, ExistingEcus.Comment FROM ExistingEcus";
-                            Query += "WHERE (ID = " + id1.ToString() + " OR ID = " + id2.ToString() + ") AND Len(" + ColLeng + ") > " + Leng.ToString() + " AS ColLen;";
-                            using (OleDbCommand cmd = new OleDbCommand(Query, con))
-                            {
-                                con.Open();
-                                OleDbDataReader reader = cmd.ExecuteReader();
-                                dtECUs.Load(reader);
-                                con.Close();
-                            }
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-                        MessageBox.Show("Read Error:" + ex.Message);
-                    }
-                    break;
-
-                // Show Protocols In Datagridview
-                case "Protocols":
-                    try
-                    {
-                        using (OleDbConnection con = new OleDbConnection(connstr1))
-                        {
-                            Query = "SELECT Protocols.ID, Protocols.Name FROM Protocols";
-                            Query += "WHERE (ID = " + id1.ToString() + " OR ID = " + id2.ToString() + ") AND Len(" + ColLeng + ") > " + Leng.ToString() + " AS ColLen;";
-                            using (OleDbCommand cmd = new OleDbCommand(Query, con))
-                            {
-                                con.Open();
-                                OleDbDataReader reader = cmd.ExecuteReader();
-                                dtECUs.Load(reader);
-                                con.Close();
-                            }
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-                        MessageBox.Show("Read Error:" + ex.Message);
-                    }
-                    break;
-
-                // Show Connection In Datagridview
-                case "Connection":
-                    try
-                    {
-                        using (OleDbConnection con = new OleDbConnection(connstr1))
-                        {
-                            Query = "SELECT Connection.ID, Connection.Protocols_ID, Connection.Pin, Connection.Baudrate, Connection.Header, Connection.Start_Command, Connection.End_Command, Connection.Itteration_Command FROM Connection";
-                            Query += "WHERE (ID = " + id1.ToString() + " OR ID = " + id2.ToString() + ") AND Len(" + ColLeng + ") > " + Leng.ToString() + " AS ColLen;";
-                            using (OleDbCommand cmd = new OleDbCommand(Query, con))
-                            {
-                                con.Open();
-                                OleDbDataReader reader = cmd.ExecuteReader();
-                                dtECUs.Load(reader);
-                                con.Close();
-                            }
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-                        MessageBox.Show("Read Error:" + ex.Message);
-                    }
-                    break;
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Read Error:" + ex.Message);
             }
 
-            return dtECUs;
+            return Records;
         }
-        public static DataTable ShowOnGridView(String tbName, String ColCont1, String Cont1, String ColCont2, String Cont2, String ColLeng, int Leng)
+        public static DataTable ShowOnGridView(Connection C)
         {
-            DataTable dtECUs = new DataTable();
-            string Query = "";
-            switch (tbName)
+            DataTable Records = new DataTable();
+            Query = "SELECT Connection.ID, Connection.Protocols_ID, " +
+                    "Connection.Pin, Connection.Baudrate, Connection.Header, " +
+                    "Connection.Start_Command, Connection.End_Command, " +
+                    "Connection.Itteration_Command FROM Connection";
+
+            try
             {
-                // Show ECUsSpecification In Datagridview
-                case "ECUsSpecification":
-                    try
+                using (OleDbConnection con = new OleDbConnection(connstr1))
+                {
+                    using (OleDbCommand cmd = new OleDbCommand(Query, con))
                     {
-                        using (OleDbConnection con = new OleDbConnection(connstr1))
-                        {
-                            Query = "SELECT ECUsSpecification.ID, ECUsSpecification.Manufacturer, ECUsSpecification.Type, ECUsSpecification.BootRef, ECUsSpecification.SoftRef, ECUsSpecification.Calibration FROM ECUsSpecification";
-                            Query += "WHERE InStr(" + ColCont1 + ",'" + Cont1 + "') AND InStr(" + ColCont2 + ",'" + Cont2 + "') AND LEN(" + ColLeng + ") >" + Leng.ToString() + ";";
-                            using (OleDbCommand cmd = new OleDbCommand(Query, con))
-                            {
-                                con.Open();
-                                OleDbDataReader reader = cmd.ExecuteReader();
-                                dtECUs.Load(reader);
-                                con.Close();
-                            }
-                        }
+                        con.Open();
+                        OleDbDataReader reader = cmd.ExecuteReader();
+                        Records.Load(reader);
+                        con.Close();
                     }
-                    catch (Exception ex)
-                    {
-                        MessageBox.Show("Read Error:" + ex.Message);
-                    }
-                    break;
-
-                // Show ExistingEcus In Datagridview
-                case "ExistingEcus":
-                    try
-                    {
-                        using (OleDbConnection con = new OleDbConnection(connstr1))
-                        {
-                            Query = "SELECT ExistingEcus.ID, ExistingEcus.Specification_ID, ExistingEcus.Connection_ID, ExistingEcus.FileName, ExistingEcus.Comment FROM ExistingEcus";
-                            Query += "WHERE InStr(" + ColCont1 + ",'" + Cont1 + "') AND InStr(" + ColCont2 + ",'" + Cont2 + "') AND LEN(" + ColLeng + ") >" + Leng.ToString() + ";";
-                            using (OleDbCommand cmd = new OleDbCommand(Query, con))
-                            {
-                                con.Open();
-                                OleDbDataReader reader = cmd.ExecuteReader();
-                                dtECUs.Load(reader);
-                                con.Close();
-                            }
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-                        MessageBox.Show("Read Error:" + ex.Message);
-                    }
-                    break;
-
-                // Show Protocols In Datagridview
-                case "Protocols":
-                    try
-                    {
-                        using (OleDbConnection con = new OleDbConnection(connstr1))
-                        {
-                            Query = "SELECT Protocols.ID, Protocols.Name FROM Protocols";
-                            Query += "WHERE InStr(" + ColCont1 + ",'" + Cont1 + "') AND InStr(" + ColCont2 + ",'" + Cont2 + "') AND LEN(" + ColLeng + ") >" + Leng.ToString() + ";";
-                            using (OleDbCommand cmd = new OleDbCommand(Query, con))
-                            {
-                                con.Open();
-                                OleDbDataReader reader = cmd.ExecuteReader();
-                                dtECUs.Load(reader);
-                                con.Close();
-                            }
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-                        MessageBox.Show("Read Error:" + ex.Message);
-                    }
-                    break;
-
-                // Show Connection In Datagridview
-                case "Connection":
-                    try
-                    {
-                        using (OleDbConnection con = new OleDbConnection(connstr1))
-                        {
-                            Query = "SELECT Connection.ID, Connection.Protocols_ID, Connection.Pin, Connection.Baudrate, Connection.Header, Connection.Start_Command, Connection.End_Command, Connection.Itteration_Command FROM Connection";
-                            Query += "WHERE InStr(" + ColCont1 + ",'" + Cont1 + "') AND InStr(" + ColCont2 + ",'" + Cont2 + "') AND LEN(" + ColLeng + ") >" + Leng.ToString() + ";";
-                            using (OleDbCommand cmd = new OleDbCommand(Query, con))
-                            {
-                                con.Open();
-                                OleDbDataReader reader = cmd.ExecuteReader();
-                                dtECUs.Load(reader);
-                                con.Close();
-                            }
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-                        MessageBox.Show("Read Error:" + ex.Message);
-                    }
-                    break;
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Read Error:" + ex.Message);
             }
 
-            return dtECUs;
-        }
-        public static DataTable ShowOnGridView(String tbName, String ColCont1, String Cont1, String ColCont2, String Cont2, String ColCont3, String Cont3, String ColLeng, int Leng)
+            return Records;
+
+        }                    
+        public static DataTable ShowOnGridView(ECUsSpecification ES, String ColCont, String Cont, String ColLeng, int Leng)
         {
-            DataTable dtECUs = new DataTable();
-            string Query = "";
-            switch (tbName)
+            DataTable Records = new DataTable();
+
+            try
             {
-                // Show ECUsSpecification In Datagridview
-                case "ECUsSpecification":
-                    try
+                using (OleDbConnection con = new OleDbConnection(connstr1))
+                {
+                    Query = "SELECT ECUsSpecification.ID, ECUsSpecification.Manufacturer, ECUsSpecification.Type, ECUsSpecification.BootRef, ECUsSpecification.SoftRef, ECUsSpecification.Calibration FROM ECUsSpecification";
+                    Query += "WHERE InStr(" + ColCont + ",'" + Cont + "') AND LEN(" + ColLeng + ") > " + Leng.ToString() + ";";
+                    using (OleDbCommand cmd = new OleDbCommand(Query, con))
                     {
-                        using (OleDbConnection con = new OleDbConnection(connstr1))
-                        {
-                            Query = "SELECT ECUsSpecification.ID, ECUsSpecification.Manufacturer, ECUsSpecification.Type, ECUsSpecification.BootRef, ECUsSpecification.SoftRef, ECUsSpecification.Calibration FROM ECUsSpecification";
-                            Query += "WHERE InStr(" + ColCont1 + ",'" + Cont1 + "') AND InStr(" + ColCont2 + ",'" + Cont2 + "') AND InStr(" + ColCont3 + ",'" + Cont3 + "') AND LEN(" + ColLeng + ") >" + Leng.ToString() + ";";
-                            using (OleDbCommand cmd = new OleDbCommand(Query, con))
-                            {
-                                con.Open();
-                                OleDbDataReader reader = cmd.ExecuteReader();
-                                dtECUs.Load(reader);
-                                con.Close();
-                            }
-                        }
+                        con.Open();
+                        OleDbDataReader reader = cmd.ExecuteReader();
+                        Records.Load(reader);
+                        con.Close();
                     }
-                    catch (Exception ex)
-                    {
-                        MessageBox.Show("Read Error:" + ex.Message);
-                    }
-                    break;
-
-                // Show ExistingEcus In Datagridview
-                case "ExistingEcus":
-                    try
-                    {
-                        using (OleDbConnection con = new OleDbConnection(connstr1))
-                        {
-                            Query = "SELECT ExistingEcus.ID, ExistingEcus.Specification_ID, ExistingEcus.Connection_ID, ExistingEcus.FileName, ExistingEcus.Comment FROM ExistingEcus";
-                            Query += "WHERE InStr(" + ColCont1 + ",'" + Cont1 + "') AND InStr(" + ColCont2 + ",'" + Cont2 + "') AND InStr(" + ColCont3 + ",'" + Cont3 + "') AND LEN(" + ColLeng + ") >" + Leng.ToString() + ";";
-                            using (OleDbCommand cmd = new OleDbCommand(Query, con))
-                            {
-                                con.Open();
-                                OleDbDataReader reader = cmd.ExecuteReader();
-                                dtECUs.Load(reader);
-                                con.Close();
-                            }
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-                        MessageBox.Show("Read Error:" + ex.Message);
-                    }
-                    break;
-
-                // Show Protocols In Datagridview
-                case "Protocols":
-                    try
-                    {
-                        using (OleDbConnection con = new OleDbConnection(connstr1))
-                        {
-                            Query = "SELECT Protocols.ID, Protocols.Name FROM Protocols";
-                            Query += "WHERE InStr(" + ColCont1 + ",'" + Cont1 + "') AND InStr(" + ColCont2 + ",'" + Cont2 + "') AND InStr(" + ColCont3 + ",'" + Cont3 + "') AND LEN(" + ColLeng + ") >" + Leng.ToString() + ";";
-                            using (OleDbCommand cmd = new OleDbCommand(Query, con))
-                            {
-                                con.Open();
-                                OleDbDataReader reader = cmd.ExecuteReader();
-                                dtECUs.Load(reader);
-                                con.Close();
-                            }
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-                        MessageBox.Show("Read Error:" + ex.Message);
-                    }
-                    break;
-
-                // Show Connection In Datagridview
-                case "Connection":
-                    try
-                    {
-                        using (OleDbConnection con = new OleDbConnection(connstr1))
-                        {
-                            Query = "SELECT Connection.ID, Connection.Protocols_ID, Connection.Pin, Connection.Baudrate, Connection.Header, Connection.Start_Command, Connection.End_Command, Connection.Itteration_Command FROM Connection";
-                            Query += "WHERE InStr(" + ColCont1 + ",'" + Cont1 + "') AND InStr(" + ColCont2 + ",'" + Cont2 + "') AND InStr(" + ColCont3 + ",'" + Cont3 + "') AND LEN(" + ColLeng + ") >" + Leng.ToString() + ";";
-                            using (OleDbCommand cmd = new OleDbCommand(Query, con))
-                            {
-                                con.Open();
-                                OleDbDataReader reader = cmd.ExecuteReader();
-                                dtECUs.Load(reader);
-                                con.Close();
-                            }
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-                        MessageBox.Show("Read Error:" + ex.Message);
-                    }
-                    break;
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Read Error:" + ex.Message);
             }
 
-            return dtECUs;
+            return Records;
         }
-        public static DataTable ShowOnGridView(String tbName, String Col, int[] SearchList)
+        public static DataTable ShowOnGridView(ExistingEcu EE,       String ColCont, String Cont, String ColLeng, int Leng)
         {
-            DataTable dtECUs = new DataTable();
-            string Query = "";
+            DataTable Records = new DataTable();
+
+            try
+            {
+                using (OleDbConnection con = new OleDbConnection(connstr1))
+                {
+                    Query = "SELECT ExistingEcus.ID, ExistingEcus.Specification_ID, ExistingEcus.Connection_ID, ExistingEcus.FileName, ExistingEcus.Comment FROM ExistingEcus";
+                    Query += "WHERE InStr(" + ColCont + ",'" + Cont + "') AND LEN(" + ColLeng + ") > 0;";
+                    using (OleDbCommand cmd = new OleDbCommand(Query, con))
+                    {
+                        con.Open();
+                        OleDbDataReader reader = cmd.ExecuteReader();
+                        Records.Load(reader);
+                        con.Close();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Read Error:" + ex.Message);
+            }
+
+            return Records;
+        }
+        public static DataTable ShowOnGridView(Protocol P,           String ColCont, String Cont, String ColLeng, int Leng)
+        {
+            DataTable Records = new DataTable();
+
+            try
+            {
+                using (OleDbConnection con = new OleDbConnection(connstr1))
+                {
+                    Query = "SELECT Protocols.ID, Protocols.Name FROM Protocols";
+                    Query += "WHERE InStr(" + ColCont + ",'" + Cont + "') AND LEN(" + ColLeng + ") > 0;";
+                    using (OleDbCommand cmd = new OleDbCommand(Query, con))
+                    {
+                        con.Open();
+                        OleDbDataReader reader = cmd.ExecuteReader();
+                        Records.Load(reader);
+                        con.Close();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Read Error:" + ex.Message);
+            }
+
+            return Records;
+        }
+        public static DataTable ShowOnGridView(Connection C,         String ColCont, String Cont, String ColLeng, int Leng)
+        {
+            DataTable Records = new DataTable();
+
+            try
+            {
+                using (OleDbConnection con = new OleDbConnection(connstr1))
+                {
+                    Query = "SELECT Connection.ID, Connection.Protocols_ID, Connection.Pin, Connection.Baudrate, Connection.Header, Connection.Start_Command, Connection.End_Command, Connection.Itteration_Command FROM Connection";
+                    Query += "WHERE InStr(" + ColCont + ",'" + Cont + "') AND LEN(" + ColLeng + ") > 0;";
+                    using (OleDbCommand cmd = new OleDbCommand(Query, con))
+                    {
+                        con.Open();
+                        OleDbDataReader reader = cmd.ExecuteReader();
+                        Records.Load(reader);
+                        con.Close();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Read Error:" + ex.Message);
+            }
+
+            return Records;
+        }
+        public static DataTable ShowOnGridView(ECUsSpecification ES, String ColLeng, int Leng, int id1, int id2)
+        {
+            DataTable Records = new DataTable();
+            Query = "SELECT ECUsSpecification.ID, ECUsSpecification.Manufacturer, ECUsSpecification.Type, ECUsSpecification.BootRef, ECUsSpecification.SoftRef, ECUsSpecification.Calibration FROM ECUsSpecification";
+            Query += "WHERE (ID = " + id1.ToString() + " OR ID = " + id2.ToString() + ") AND Len(" + ColLeng + ") > " + Leng.ToString() + " AS ColLen;";
+
+            try
+            {
+                using (OleDbConnection con = new OleDbConnection(connstr1))
+                {
+                    using (OleDbCommand cmd = new OleDbCommand(Query, con))
+                    {
+                        con.Open();
+                        OleDbDataReader reader = cmd.ExecuteReader();
+                        Records.Load(reader);
+                        con.Close();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Read Error:" + ex.Message);
+            }
+
+            return Records;
+        }
+        public static DataTable ShowOnGridView(ExistingEcu EE,       String ColLeng, int Leng, int id1, int id2)
+        {
+            DataTable Records = new DataTable();
+            Query = "SELECT ExistingEcus.ID, ExistingEcus.Specification_ID, ExistingEcus.Connection_ID, ExistingEcus.FileName, ExistingEcus.Comment FROM ExistingEcus";
+            Query += "WHERE (ID = " + id1.ToString() + " OR ID = " + id2.ToString() + ") AND Len(" + ColLeng + ") > " + Leng.ToString() + " AS ColLen;";
+
+            try
+            {
+                using (OleDbConnection con = new OleDbConnection(connstr1))
+                {
+                    using (OleDbCommand cmd = new OleDbCommand(Query, con))
+                    {
+                        con.Open();
+                        OleDbDataReader reader = cmd.ExecuteReader();
+                        Records.Load(reader);
+                        con.Close();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Read Error:" + ex.Message);
+            }
+
+            return Records;
+        }
+        public static DataTable ShowOnGridView(Protocol P,           String ColLeng, int Leng, int id1, int id2)
+        {
+            DataTable Records = new DataTable();
+            Query = "SELECT Protocols.ID, Protocols.Name FROM Protocols";
+            Query += "WHERE (ID = " + id1.ToString() + " OR ID = " + id2.ToString() + ") AND Len(" + ColLeng + ") > " + Leng.ToString() + " AS ColLen;";
+
+            try
+            {
+                using (OleDbConnection con = new OleDbConnection(connstr1))
+                {
+                    using (OleDbCommand cmd = new OleDbCommand(Query, con))
+                    {
+                        con.Open();
+                        OleDbDataReader reader = cmd.ExecuteReader();
+                        Records.Load(reader);
+                        con.Close();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Read Error:" + ex.Message);
+            }
+
+            return Records;
+        }
+        public static DataTable ShowOnGridView(Connection C,         String ColLeng, int Leng, int id1, int id2)
+        {
+            DataTable Records = new DataTable();
+            Query = "SELECT Connection.ID, Connection.Protocols_ID, Connection.Pin, Connection.Baudrate, Connection.Header, Connection.Start_Command, Connection.End_Command, Connection.Itteration_Command FROM Connection";
+            Query += "WHERE (ID = " + id1.ToString() + " OR ID = " + id2.ToString() + ") AND Len(" + ColLeng + ") > " + Leng.ToString() + " AS ColLen;";
+
+            try
+            {
+                using (OleDbConnection con = new OleDbConnection(connstr1))
+                {
+                    using (OleDbCommand cmd = new OleDbCommand(Query, con))
+                    {
+                        con.Open();
+                        OleDbDataReader reader = cmd.ExecuteReader();
+                        Records.Load(reader);
+                        con.Close();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Read Error:" + ex.Message);
+            }
+
+            return Records;
+        }
+        public static DataTable ShowOnGridView(ECUsSpecification ES, String ColCont1, String Cont1, String ColCont2, String Cont2, String ColLeng, int Leng)
+        {
+            DataTable Records = new DataTable();
+            Query = "SELECT ECUsSpecification.ID, ECUsSpecification.Manufacturer, ECUsSpecification.Type, ECUsSpecification.BootRef, ECUsSpecification.SoftRef, ECUsSpecification.Calibration FROM ECUsSpecification";
+            Query += "WHERE InStr(" + ColCont1 + ",'" + Cont1 + "') AND InStr(" + ColCont2 + ",'" + Cont2 + "') AND LEN(" + ColLeng + ") >" + Leng.ToString() + ";";
+
+            try
+            {
+                using (OleDbConnection con = new OleDbConnection(connstr1))
+                {
+                    using (OleDbCommand cmd = new OleDbCommand(Query, con))
+                    {
+                        con.Open();
+                        OleDbDataReader reader = cmd.ExecuteReader();
+                        Records.Load(reader);
+                        con.Close();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Read Error:" + ex.Message);
+            }
+
+            return Records;
+        }
+        public static DataTable ShowOnGridView(ExistingEcu EE,       String ColCont1, String Cont1, String ColCont2, String Cont2, String ColLeng, int Leng)
+        {
+            DataTable Records = new DataTable();
+            Query = "SELECT ExistingEcus.ID, ExistingEcus.Specification_ID, ExistingEcus.Connection_ID, ExistingEcus.FileName, ExistingEcus.Comment FROM ExistingEcus";
+            Query += "WHERE InStr(" + ColCont1 + ",'" + Cont1 + "') AND InStr(" + ColCont2 + ",'" + Cont2 + "') AND LEN(" + ColLeng + ") >" + Leng.ToString() + ";";
+
+            try
+            {
+                using (OleDbConnection con = new OleDbConnection(connstr1))
+                {
+                    using (OleDbCommand cmd = new OleDbCommand(Query, con))
+                    {
+                        con.Open();
+                        OleDbDataReader reader = cmd.ExecuteReader();
+                        Records.Load(reader);
+                        con.Close();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Read Error:" + ex.Message);
+            }
+
+            return Records;
+        }
+        public static DataTable ShowOnGridView(Protocol P,           String ColCont1, String Cont1, String ColCont2, String Cont2, String ColLeng, int Leng)
+        {
+            DataTable Records = new DataTable();
+            Query = "SELECT Protocols.ID, Protocols.Name FROM Protocols";
+            Query += "WHERE InStr(" + ColCont1 + ",'" + Cont1 + "') AND InStr(" + ColCont2 + ",'" + Cont2 + "') AND LEN(" + ColLeng + ") >" + Leng.ToString() + ";";
+
+            try
+            {
+                using (OleDbConnection con = new OleDbConnection(connstr1))
+                {
+                    using (OleDbCommand cmd = new OleDbCommand(Query, con))
+                    {
+                        con.Open();
+                        OleDbDataReader reader = cmd.ExecuteReader();
+                        Records.Load(reader);
+                        con.Close();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Read Error:" + ex.Message);
+            }
+
+            return Records;
+        }
+        public static DataTable ShowOnGridView(Connection C,         String ColCont1, String Cont1, String ColCont2, String Cont2, String ColLeng, int Leng)
+        {
+            DataTable Records = new DataTable();
+            Query = "SELECT Connection.ID, Connection.Protocols_ID, Connection.Pin, Connection.Baudrate, Connection.Header, Connection.Start_Command, Connection.End_Command, Connection.Itteration_Command FROM Connection";
+            Query += "WHERE InStr(" + ColCont1 + ",'" + Cont1 + "') AND InStr(" + ColCont2 + ",'" + Cont2 + "') AND LEN(" + ColLeng + ") >" + Leng.ToString() + ";";
+
+            try
+            {
+                using (OleDbConnection con = new OleDbConnection(connstr1))
+                {
+                    using (OleDbCommand cmd = new OleDbCommand(Query, con))
+                    {
+                        con.Open();
+                        OleDbDataReader reader = cmd.ExecuteReader();
+                        Records.Load(reader);
+                        con.Close();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Read Error:" + ex.Message);
+            }
+
+            return Records;
+        }
+        public static DataTable ShowOnGridView(ECUsSpecification ES, String ColCont1, String Cont1, String ColCont2, String Cont2, String ColCont3, String Cont3, String ColLeng, int Leng)
+        {
+            DataTable Records = new DataTable();
+            Query = "SELECT ECUsSpecification.ID, ECUsSpecification.Manufacturer, ECUsSpecification.Type, ECUsSpecification.BootRef, ECUsSpecification.SoftRef, ECUsSpecification.Calibration FROM ECUsSpecification";
+            Query += "WHERE InStr(" + ColCont1 + ",'" + Cont1 + "') AND InStr(" + ColCont2 + ",'" + Cont2 + "') AND InStr(" + ColCont3 + ",'" + Cont3 + "') AND LEN(" + ColLeng + ") >" + Leng.ToString() + ";";
+
+            try
+            {
+                using (OleDbConnection con = new OleDbConnection(connstr1))
+                {
+                    using (OleDbCommand cmd = new OleDbCommand(Query, con))
+                    {
+                        con.Open();
+                        OleDbDataReader reader = cmd.ExecuteReader();
+                        Records.Load(reader);
+                        con.Close();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Read Error:" + ex.Message);
+            }
+
+            return Records;
+        }
+        public static DataTable ShowOnGridView(ExistingEcu EE,       String ColCont1, String Cont1, String ColCont2, String Cont2, String ColCont3, String Cont3, String ColLeng, int Leng)
+        {
+            DataTable Records = new DataTable();
+            Query = "SELECT ExistingEcus.ID, ExistingEcus.Specification_ID, ExistingEcus.Connection_ID, ExistingEcus.FileName, ExistingEcus.Comment FROM ExistingEcus";
+            Query += "WHERE InStr(" + ColCont1 + ",'" + Cont1 + "') AND InStr(" + ColCont2 + ",'" + Cont2 + "') AND InStr(" + ColCont3 + ",'" + Cont3 + "') AND LEN(" + ColLeng + ") >" + Leng.ToString() + ";";
+
+            try
+            {
+                using (OleDbConnection con = new OleDbConnection(connstr1))
+                {
+                    using (OleDbCommand cmd = new OleDbCommand(Query, con))
+                    {
+                        con.Open();
+                        OleDbDataReader reader = cmd.ExecuteReader();
+                        Records.Load(reader);
+                        con.Close();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Read Error:" + ex.Message);
+            }
+
+            return Records;
+        }
+        public static DataTable ShowOnGridView(Protocol P,           String ColCont1, String Cont1, String ColCont2, String Cont2, String ColCont3, String Cont3, String ColLeng, int Leng)
+        {
+            DataTable Records = new DataTable();
+            Query = "SELECT Protocols.ID, Protocols.Name FROM Protocols";
+            Query += "WHERE InStr(" + ColCont1 + ",'" + Cont1 + "') AND InStr(" + ColCont2 + ",'" + Cont2 + "') AND InStr(" + ColCont3 + ",'" + Cont3 + "') AND LEN(" + ColLeng + ") >" + Leng.ToString() + ";";
+
+            try
+            {
+                using (OleDbConnection con = new OleDbConnection(connstr1))
+                {
+                    using (OleDbCommand cmd = new OleDbCommand(Query, con))
+                    {
+                        con.Open();
+                        OleDbDataReader reader = cmd.ExecuteReader();
+                        Records.Load(reader);
+                        con.Close();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Read Error:" + ex.Message);
+            }
+
+            return Records;
+        }
+        public static DataTable ShowOnGridView(Connection C,         String ColCont1, String Cont1, String ColCont2, String Cont2, String ColCont3, String Cont3, String ColLeng, int Leng)
+        {
+            DataTable Records = new DataTable();
+            Query = "SELECT Connection.ID, Connection.Protocols_ID, Connection.Pin, Connection.Baudrate, Connection.Header, Connection.Start_Command, Connection.End_Command, Connection.Itteration_Command FROM Connection";
+            Query += "WHERE InStr(" + ColCont1 + ",'" + Cont1 + "') AND InStr(" + ColCont2 + ",'" + Cont2 + "') AND InStr(" + ColCont3 + ",'" + Cont3 + "') AND LEN(" + ColLeng + ") >" + Leng.ToString() + ";";
+
+            try
+            {
+                using (OleDbConnection con = new OleDbConnection(connstr1))
+                {
+                    using (OleDbCommand cmd = new OleDbCommand(Query, con))
+                    {
+                        con.Open();
+                        OleDbDataReader reader = cmd.ExecuteReader();
+                        Records.Load(reader);
+                        con.Close();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Read Error:" + ex.Message);
+            }
+
+            return Records;
+        }
+        public static DataTable ShowOnGridView(ECUsSpecification ES, String Col, int[] SearchList)
+        {
+            DataTable Records = new DataTable();
             int Leng = SearchList.Count();
-            
-            switch (tbName)
+            Query = "SELECT ECUsSpecification.ID, ECUsSpecification.Manufacturer, " +
+                    "ECUsSpecification.Type, ECUsSpecification.BootRef, ECUsSpecification.SoftRef, " +
+                    "ECUsSpecification.Calibration FROM ECUsSpecification";
+
+            try
             {
-                // Show ECUsSpecification In Datagridview
-                case "ECUsSpecification":
-                    try
+                using (OleDbConnection con = new OleDbConnection(connstr1))
+                {
+                    for (int i = 0; i < Leng; i++)
                     {
-                        using (OleDbConnection con = new OleDbConnection(connstr1))
+                        Query += "WHERE " + Col + " = " + SearchList[i].ToString().Trim() + ";";
+                        using (OleDbCommand cmd = new OleDbCommand(Query, con))
                         {
-                            for (int i = 0; i < Leng; i++)
-                            {
-                                Query = "SELECT ECUsSpecification.ID, ECUsSpecification.Manufacturer, ECUsSpecification.Type, ECUsSpecification.BootRef, ECUsSpecification.SoftRef, ECUsSpecification.Calibration FROM ECUsSpecification";
-                                Query += "WHERE " + Col + " = " + SearchList[i].ToString().Trim() + ";";
-                                using (OleDbCommand cmd = new OleDbCommand(Query, con))
-                                {
-                                    con.Open();
-                                    OleDbDataReader reader = cmd.ExecuteReader();
-                                    dtECUs.Load(reader);
-                                    con.Close();
-                                }
-                            }
+                            con.Open();
+                            OleDbDataReader reader = cmd.ExecuteReader();
+                            Records.Load(reader);
+                            con.Close();
                         }
                     }
-                    catch (Exception ex)
-                    {
-                        MessageBox.Show("Read Error:" + ex.Message);
-                    }
-                    break;
-
-                // Show ExistingEcus In Datagridview
-                case "ExistingEcus":
-                    try
-                    {
-                        using (OleDbConnection con = new OleDbConnection(connstr1))
-                        {
-                            for (int i = 0; i < Leng; i++)
-                            {
-                                Query = "SELECT ExistingEcus.ID, ExistingEcus.Specification_ID, ExistingEcus.Connection_ID, ExistingEcus.FileName, ExistingEcus.Comment FROM ExistingEcus";
-                                Query += "WHERE " + Col + " = " + SearchList[i].ToString().Trim() + ";";
-                                using (OleDbCommand cmd = new OleDbCommand(Query, con))
-                                {
-                                    con.Open();
-                                    OleDbDataReader reader = cmd.ExecuteReader();
-                                    dtECUs.Load(reader);
-                                    con.Close();
-                                }
-                            }
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-                        MessageBox.Show("Read Error:" + ex.Message);
-                    }
-                    break;
-
-                // Show Protocols In Datagridview
-                case "Protocols":
-                    try
-                    {
-                        using (OleDbConnection con = new OleDbConnection(connstr1))
-                        {
-                            for (int i = 0; i < Leng; i++)
-                            {
-                                Query = "SELECT Protocols.ID, Protocols.Name FROM Protocols";
-                                Query += "WHERE " + Col + " = " + SearchList[i].ToString().Trim() + ";";
-                                using (OleDbCommand cmd = new OleDbCommand(Query, con))
-                                {
-                                    con.Open();
-                                    OleDbDataReader reader = cmd.ExecuteReader();
-                                    dtECUs.Load(reader);
-                                    con.Close();
-                                }
-                            }
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-                        MessageBox.Show("Read Error:" + ex.Message);
-                    }
-                    break;
-
-                // Show Connection In Datagridview
-                case "Connection":
-                    try
-                    {
-                        using (OleDbConnection con = new OleDbConnection(connstr1))
-                        {
-                            for (int i = 0; i < Leng; i++)
-                            {
-                                Query = "SELECT Connection.ID, Connection.Protocols_ID, Connection.Pin, Connection.Baudrate, Connection.Header, Connection.Start_Command, Connection.End_Command, Connection.Itteration_Command FROM Connection";
-                                Query += "WHERE " + Col + " = " + SearchList[i].ToString().Trim() + ";";
-                                using (OleDbCommand cmd = new OleDbCommand(Query, con))
-                                {
-                                    con.Open();
-                                    OleDbDataReader reader = cmd.ExecuteReader();
-                                    dtECUs.Load(reader);
-                                    con.Close();
-                                }
-                            }
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-                        MessageBox.Show("Read Error:" + ex.Message);
-                    }
-                    break;
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Read Error:" + ex.Message);
             }
 
-            return dtECUs;
+            return Records;
+        }
+        public static DataTable ShowOnGridView(ExistingEcu EE,       String Col, int[] SearchList)
+        {
+            DataTable Records = new DataTable();
+            int Leng = SearchList.Count();
+            Query = "SELECT ExistingEcus.ID, ExistingEcus.Specification_ID, " +
+                    "ExistingEcus.Connection_ID, ExistingEcus.FileName, " +
+                    "ExistingEcus.Comment FROM ExistingEcus";
+
+            try
+            {
+                using (OleDbConnection con = new OleDbConnection(connstr1))
+                {
+                    for (int i = 0; i < Leng; i++)
+                    {
+                        Query += "WHERE " + Col + " = " + SearchList[i].ToString().Trim() + ";";
+                        using (OleDbCommand cmd = new OleDbCommand(Query, con))
+                        {
+                            con.Open();
+                            OleDbDataReader reader = cmd.ExecuteReader();
+                            Records.Load(reader);
+                            con.Close();
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Read Error:" + ex.Message);
+            }
+
+            return Records;
+        }
+        public static DataTable ShowOnGridView(Protocol P,           String Col, int[] SearchList)
+        {
+            DataTable Records = new DataTable();
+            int Leng = SearchList.Count();
+            Query = "SELECT Protocols.ID, Protocols.Name FROM Protocols";
+
+            try
+            {
+                using (OleDbConnection con = new OleDbConnection(connstr1))
+                {
+                    for (int i = 0; i < Leng; i++)
+                    {
+                        Query += "WHERE " + Col + " = " + SearchList[i].ToString().Trim() + ";";
+                        using (OleDbCommand cmd = new OleDbCommand(Query, con))
+                        {
+                            con.Open();
+                            OleDbDataReader reader = cmd.ExecuteReader();
+                            Records.Load(reader);
+                            con.Close();
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Read Error:" + ex.Message);
+            }
+
+            return Records;
+        }
+        public static DataTable ShowOnGridView(Connection C,         String Col, int[] SearchList)
+        {
+            DataTable Records = new DataTable();
+            int Leng = SearchList.Count();
+            Query = "SELECT Connection.ID, Connection.Protocols_ID, " +
+                    "Connection.Pin, Connection.Baudrate, Connection.Header, " +
+                    "Connection.Start_Command, Connection.End_Command, " +
+                    "Connection.Itteration_Command FROM Connection";
+
+            try
+            {
+                using (OleDbConnection con = new OleDbConnection(connstr1))
+                {
+                    for (int i = 0; i < Leng; i++)
+                    {
+                        Query += "WHERE " + Col + " = " + SearchList[i].ToString().Trim() + ";";
+                        using (OleDbCommand cmd = new OleDbCommand(Query, con))
+                        {
+                            con.Open();
+                            OleDbDataReader reader = cmd.ExecuteReader();
+                            Records.Load(reader);
+                            con.Close();
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Read Error:" + ex.Message);
+            }
+
+            return Records;
         }
 
         // Read Data From 2 Joined Tables
-        public static String[] ReadFromJoinedTables(String Table1, String Table2, String ES_Col, String EE_Col)
+        public static String[] ReadFromJoinedTables(String Table1, String Table2, String Col1, String Col2)
         {
             string Query = "";
             string[] Record = new string[7];
-
-            Query = "SELECT * FROM " + Table1 + " INNER JOIN " + Table2 + " ON ECUsSpecification.[" + ES_Col + "] = ExistingEcus.[" + EE_Col + "];";
+            Query = "SELECT * FROM " + Table1 + " INNER JOIN " + Table2 + " ON " + Table1 + ".[" + Col1 + "] = " + Table2 + ".[" + Col2 + "];";
 
             using (OleDbConnection con = new OleDbConnection(connstr1))
             {
