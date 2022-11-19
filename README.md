@@ -10,7 +10,6 @@ and get data command responses from them.
 It converts the commands received from ECU into standard CAN format.
 -----------------------------------------------------------------------
 DataBaseConnection class:
-
 The required data to work with is stored in a MS Access Database and
 this class connects to the database and reads the data from it.
 
