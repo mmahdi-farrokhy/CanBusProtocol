@@ -6,42 +6,54 @@ using System.Threading;
 
 namespace ProMap
 {
+    // In Class Baraye Download ECU haye CAN ast.
+    class DownloadCan
     {
         public static int ProcBarVal = 0;
-        public static int Frame_Len = 0xF0;
+        public const int FRAME_LEN = 0xF0;
         private static string SoftRef = "";
         private static int Start_Address1 = 0;
         private static int End_Address1 = 0;
         private static int cmd_Length1 = 0;
         private static int Start_Address2 = 0;
         private static int cmd_Length2 = 0;
+        private const string DOWNLOAD_FINISHED_MSG = "پایان دانلود";
+        private const string DOWNLOAD_FAILED_ERROR = "دانلود با خطا مواجه شد";
+        private const string ECU_NOT_DETECTED_ERROR = "ای سی یو شناسایی نشد";
+        private const string CLEARING_ERROR = "پاکسازی ای سی یو با خطا مواجه شد";
+        private const string ENTERED_TO_ZONE_1 = "شروع ناحیه اول";
+        private const string ENTERED_TO_ZONE_2 = "شروع ناحیه دوم";
 
-		
+        // Data haye simulator in tabe dar masir zir zakhire shode ast
+        // E:\User\work\MASTER DIAG\M.Mahdi Farrokhy\Remap Files\EasyU CAN\EasyU Download Simulator
+
+        // Start Address Of Zone 2 is 0x20000
+        // Command Length Of Zone 2 is 0x20000
         public static bool Crouse_EasyU25()
         {
             ProcBarVal = 0;
             string resp = "";
 
             // Zone 1 Variables
-            Start_Address1 = DumpConnection.Start_Address();            // Start Address Of Zone 1
-            End_Address1 = DumpConnection.End_Address();                // Start Address Of Zone 1
-            cmd_Length1 = Start_Address1 - End_Address1;                // Length Of Zone 1
+            Start_Address1 = DumpConnection.Start_Address();           // Start Address Of Zone 1
+            End_Address1 = DumpConnection.End_Address();               // Start Address Of Zone 1
+            cmd_Length1 = Start_Address1 - End_Address1;            // Length Of Zone 1
 
-            int NumOfFrames1 = cmd_Length1 / Frame_Len;             	// Number Of Commands Of Zone 1 With The Lenght F1
-            int rest1 = cmd_Length1 % Frame_Len;                    	// Length Of The Last Frame
-            int last_add1 = End_Address1 - rest1 + 1;   				// Start Address Of The Last Frame
+            int NumOfFrames1 = cmd_Length1 / FRAME_LEN;             // Number Of Commands Of Zone 1 With The Lenght F1
+            int rest1 = cmd_Length1 % FRAME_LEN;                    // Length Of The Last Frame
+            int last_add1 = End_Address1 - rest1 + 1;   // Start Address Of The Last Frame
 
             string[] cmd1 = new string[cmd_Length1];
             string[] Frames1 = new string[NumOfFrames1];
             string[] Final_cmd1 = new string[NumOfFrames1 + 1];
 
             // Zone 2 Variables
-            Start_Address2 = 0x20000;                               	// Start Address Of Zone 1
-            cmd_Length2 = 0x20000;                                  	// Length Of Zone 1
+            Start_Address2 = 0x20000;                               // Start Address Of Zone 1
+            cmd_Length2 = 0x20000;                                  // Length Of Zone 1
 
-            int NumOfFrames2 = cmd_Length2 / Frame_Len;             	// Number Of Commands Of Zone 1 With The Lenght F1
-            int rest2 = cmd_Length1 % Frame_Len;                    	// Length Of The Last Frame
-            int last_add2 = Start_Address2 + cmd_Length2 - rest2;   	// Start Address Of The Last Frame
+            int NumOfFrames2 = cmd_Length2 / FRAME_LEN;             // Number Of Commands Of Zone 1 With The Lenght F1
+            int rest2 = cmd_Length1 % FRAME_LEN;                    // Length Of The Last Frame
+            int last_add2 = Start_Address2 + cmd_Length2 - rest2;   // Start Address Of The Last Frame
 
             string[] cmd2 = new string[cmd_Length2];
             string[] Frames2 = new string[NumOfFrames2];
@@ -79,7 +91,7 @@ namespace ProMap
                 CanECUs.CAN_GetData(ref resp);
                 if (resp.Substring(12, 2) == "7F" || resp == "")
                 {
-                    Message.messageBox_Show_Ok("xs", "ای سی یو شناسایی نشد");
+                    Message.messageBox_Show_Ok("xs", ECU_NOT_DETECTED_ERROR);
                     return false;
                 }
             SoftRef = CanECUs.Can_SR_Normalize(resp);
@@ -114,7 +126,7 @@ namespace ProMap
                 CanECUs.CAN_GetData(ref resp);
             if (resp.Substring(12, 2) == "7F")
             {
-                Message.messageBox_Show_Ok("xs", "ای سی یو شناسایی نشد");
+                Message.messageBox_Show_Ok("xs", ECU_NOT_DETECTED_ERROR);
                 return false;
             }
 
@@ -172,7 +184,7 @@ namespace ProMap
             CanECUs.CAN_GetData(ref resp);
             if (resp.Substring(9, 2) == "7F")
             {
-                Message.messageBox_Show_Ok("xs", "پاکسازی ای سی یو با خطا مواجه شد");
+                Message.messageBox_Show_Ok("xs", CLEARING_ERROR);
                 return false;
             }
 
@@ -192,13 +204,13 @@ namespace ProMap
                 CanECUs.CAN_GetData(ref resp);
             } while (resp.Substring(12, 2) == "7F");
 
-            frm_Main._FrmMainObj.UpdateMessage("شروع ناحیه اول");
+            frm_Main._FrmMainObj.UpdateMessage(ENTERED_TO_ZONE_1);
             cmd1 = DumpConnection.Read(Start_Address1, cmd_Length1); // Read Full Command Of Zone 1
 
             // Divide Command To Frames With The Length 0xF0
             for (int i = 0; i < NumOfFrames1; i++)
-                for (int j = 0; j < Frame_Len; j++)
-                    Frames1[i] += cmd1[j + i * Frame_Len] + " ";
+                for (int j = 0; j < FRAME_LEN; j++)
+                    Frames1[i] += cmd1[j + i * FRAME_LEN] + " ";
 
             // Add F1 36 To The Beginning Of The Frames
             for (int i = 0; i < NumOfFrames1; i++)
@@ -221,18 +233,18 @@ namespace ProMap
 
                 if (resp.Trim() == "" || resp.Substring(12, 2) == "7F" || resp.Substring(9, 5) != "01 76")
                 {
-                    Message.messageBox_Show_Ok("xs", "دانلود با خطا مواجه شد");
+                    Message.messageBox_Show_Ok("xs", DOWNLOAD_FAILED_ERROR);
                     return false;
                 }
             }
 
-            frm_Main._FrmMainObj.UpdateMessage("شروع ناحیه دوم");
+            frm_Main._FrmMainObj.UpdateMessage(ENTERED_TO_ZONE_2);
             cmd2 = DumpConnection.Read(Start_Address2, cmd_Length2); // Read Full Command Of Zone 2
 
             // Divide Command To Frames With The Length 0xF0
             for (int i = 0; i < NumOfFrames2; i++)
-                for (int j = 0; j < Frame_Len; j++)
-                    Frames2[i] += cmd2[j + i * Frame_Len] + " ";
+                for (int j = 0; j < FRAME_LEN; j++)
+                    Frames2[i] += cmd2[j + i * FRAME_LEN] + " ";
 
             // Add F1 36 To The Beginning Of The Frames
             for (int i = 0; i < NumOfFrames2; i++)
@@ -250,12 +262,12 @@ namespace ProMap
 
                 if (resp.Trim() == "" || resp.Substring(12, 2) == "7F" || resp.Substring(9, 5) != "01 76")
                 {
-                    Message.messageBox_Show_Ok("xs", "دانلود با خطا مواجه شد");
+                    Message.messageBox_Show_Ok("xs", DOWNLOAD_FAILED_ERROR);
                     return false;
                 }
             }
 
-            frm_Main._FrmMainObj.UpdateMessage("پایان دانلود");
+            frm_Main._FrmMainObj.UpdateMessage(DOWNLOAD_FINISHED_MSG);
             return true;
         }
 
