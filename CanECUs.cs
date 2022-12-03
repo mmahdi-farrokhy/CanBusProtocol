@@ -10,19 +10,35 @@ using System.Globalization;
 using System.Threading;
 
 namespace ProMap
-{    
+{
+    // In Class baraye etesal, ersal va daryefte command ba ECU haye CAN ijad shode
+    // Data estefade shode baraye sakht algorithme in tavabe dar file zir save shode
+    // EasyU2_Request_Response_Commands.xlsx
+    // EasyU2_Real_Data_CanEventSeries.txt
+    // EasyU2_Identification_CAN_Event.txt
+    // EasyU2_Identification_CAN.txt
+
     class CanECUs
     {
-        public const string CanBudrate_3B = "06 04 13";//CanBaudrate_500k_B
+        private const string CanBudrate_3B = "06 04 13";//CanBaudrate_500k_B
+        private const string initMsg = "1E F1 01 01 65 14 EE C4 E4 B5 94 E4 A6 65 65 65 65 65 65 65 65 65 65 65 0E";
+        private const string icInitMsg = "1B 00 80 00 0E 00 00 00 00 00 00 00 00 00 00 00 00 11 00 00 00 00 00 00 00 00 ";
+        private const string canInitCmdStart = "1B 00 20 00 0E 00 00 ";
+        private const string canInitCmdMiddle = " 00 00 00 00 00 00 00 00 4";
+        private const string canInitCmdEnd = " 00 00 00 00 00 00 00";
+        private const string sumcheckCmdStart = "1B 00 2";
+        private const string sumcheckCmdMiddle = " 00 0E 00 00 ";
+        private const string sumcheckCmdEnd = " 20 00 00 00 00 00 00 00 00 00 00 00";
+        private const string bigSizeByte = "Size Byte Is Larger Than Real Size";
+        private const string smallSizeByte = "Size Byte Is Smaller Than Real Size";
 
-		// Initialize the IC for starting the connection procedure
         public static bool CAN_IC_Init(string Header_2B, string Mask_2B)
         {
             int M_1 = 0x10;
             int M_2 = 0x20;
             int M_3 = 0x30;
 
-            Connections.SendCommand("1E F1 01 01 65 14 EE C4 E4 B5 94 E4 A6 65 65 65 65 65 65 65 65 65 65 65 0E", 100);
+            Connections.SendCommand(initMsg, 100);
 
             bool Logi = CAN_Init();
             if (Logi)
@@ -41,14 +57,13 @@ namespace ProMap
 
             return Logi;
         }
-               
-		// Initialize the IC for CAN protocol
-        public static bool CAN_Init()
+
+        private static bool CAN_Init()
         {
             string InitMsg;
             bool result;
 
-            InitMsg = AutoDetection.AddSumCheck("1B 00 80 00 0E 00 00 00 00 00 00 00 00 00 00 00 00 11 00 00 00 00 00 00 00 00 " + CanBudrate_3B);
+            InitMsg = AutoDetection.AddSumCheck(icInitMsg + CanBudrate_3B);
             Connections.SendCommand(InitMsg, 100);
 
             if (Connections.ReadNbyte().Contains("60"))
@@ -58,37 +73,41 @@ namespace ProMap
 
             return result;
         }
-		
-		// Initialize the IC for CAN send and receive
-        public static bool CAN_Init_MOB(int MOB, string Header_2B, string Mask_2B)
-        {
-            string InitMsg;
 
-            InitMsg = AutoDetection.AddSumCheck("1B 00 20 00 0E 00 00 " + Header_2B.Substring(0, 4) + "8" + " 00 00 00 00 00 00 00 00 4" + ((MOB / 0x10)).ToString("X1") + " FF FF " + Mask_2B + " 00 00 00 00 00 00 00");
-            bool result = Connections.SendCommand(InitMsg, 100);
+        private static bool CAN_Init_MOB(int MOB, string Header_2B, string Mask_2B)
+        {
+            string initializeMsg;
+            string header = Header_2B.Trim() + "8";
+            string mob = ((MOB / 0x10)).ToString("X1");
+            string canInitMsg = canInitCmdStart + header + canInitCmdMiddle + mob + " FF FF " + Mask_2B + canInitCmdEnd;      
+
+            initializeMsg = AutoDetection.AddSumCheck(canInitMsg);
+            bool result = Connections.SendCommand(initializeMsg, 100);
+            System.Threading.Thread.Sleep(100);
 
             return result;
-            System.Threading.Thread.Sleep(100);
         }
 
-        // Send standard CAN Data Commands
-        public static bool CAN_Send(string Header_2B, string Command_8B)
+        // in tabe baraye ersale command haye CAN ba tule kamtar az 8 ast
+        private static bool CAN_Send(string Header_2B, string Command_8B)
         {
             Command_8B = Command_8B.Trim();
             int Command_Count = ((Command_8B.Length + 1) / 3);
             string InitMsg;
             bool result = false;
+            string sumCheckCommand = sumcheckCmdStart + Command_Count + sumcheckCmdMiddle + Header_2B + " " + Command_8B + sumcheckCmdEnd;
 
             if (Command_8B == "")
                 result = false;
 
-            InitMsg = AutoDetection.AddSumCheck("1B 00 2" + Command_Count + " 00 0E 00 00 " + Header_2B + " " + Command_8B + " 20 00 00 00 00 00 00 00 00 00 00 00");
+            InitMsg = AutoDetection.AddSumCheck(sumCheckCommand);
             result = Connections.SendCommand(InitMsg, 1);//100
 
             return result;            
         }       
         
-        // Send CAN Data Commands Longer Than 8 Bytes
+        // in tabe, tabe e asli baraye ersale command haye CAN mibashad
+        // yani hame command haye bozorgtar ya kuchaktar az 8 byte
         public static bool CAN_Regular_Send(string Header2B, string Body)
         {
             int NumOfBytes = ((Body.Length + 1) / 3) - 1;
@@ -103,12 +122,12 @@ namespace ProMap
 
             if (NumOfBytes < GivenSize)
             {
-                Message.messageBox_Show_Ok("xs", "!Size Byte Is Larger Than Real Size");
+                Message.messageBox_Show_Ok("xs", bigSizeByte);
                 result = false;
             }
             else if (NumOfBytes > GivenSize)
             {
-                Message.messageBox_Show_Ok("xs", "!Size Byte Is Smaller Than Real Size");
+                Message.messageBox_Show_Ok("xs", smallSizeByte);
                 result = false;
             }
             else
@@ -144,8 +163,17 @@ namespace ProMap
             return result;
         }
 
-        //This Function Reads The Data From The Buffer And Extracts
-        //The Header And The Body Of ECUs Response And Creates An Standard Command        
+        //This function reads the data from the buffer and extracts
+        //The header and the body of ECUs response and creates an standard command
+
+        // in tabe data ra az buffer mikhanad va header va body ra 
+        // az command ECU estekhraj mikonad va yek command standard misazad
+        // Example1: 
+        // input: 60 6D 11 07 E8 08 02 50 03 00 00 00 00 00
+        // output: 07 E0 08 02 50 03 00 00 00 00 00
+        // Example2: 
+        // input: 07 E8 61 92 41 32 43 39 60 6D 11 07 E8 08 21 39 36 36 34 37 30 30 6D 11 07 E8 08 22 30 31 20 20 20 55 55 6D 11 07 E8 08 23 01 02 03 04 05 55 55
+        // output: 07 E8 1B 61 92 41 32 43 39 39 36 36 34 37 30 30 30 31 20 20 20 55 55 01 02 03 04 05 55 55
         public static bool CAN_GetData(ref string ECUCommand)
         {
             string Data = "";
@@ -222,8 +250,7 @@ namespace ProMap
 
             return result;
         }
-		
-		// Takes The SoftRef Extracted From ECU's Response Command And Turns It Into String Of Characters
+
         public static string Can_SR_Normalize(string SR)
         {
             string SoftRef = "";
@@ -236,7 +263,6 @@ namespace ProMap
             return SoftRef;
         }
 
-		// Takes The BootRef Extracted From ECU's Response Command And Turns It Into String Of Characters
         public static string Can_BR_Normalize(string BR)
         {
             string Result = "";
@@ -249,7 +275,6 @@ namespace ProMap
             return Result;
         }
         
-		// Takes The Calibration Extracted From ECU's Response Command And Turns It Into String Of Characters
         public static string Can_CA_Normalize(string CA)
         {
             string Result = "";
@@ -262,7 +287,6 @@ namespace ProMap
             return Result;
         }
 
-		// Converts String Of 2 Characters (1 Hexadecimal Byte) Into A Character
         static public int Str2Hex(string Byte)
         {
             int Result = 0;
