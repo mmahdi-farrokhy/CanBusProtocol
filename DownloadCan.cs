@@ -6,63 +6,53 @@ using System.Threading;
 
 namespace ProMap
 {
-    // In Class Baraye Download ECU haye CAN ast.
     class DownloadCan
     {
-        public static int ProcBarVal = 0;
+        public static int procBarVal = 0;
         public const int FRAME_LEN = 0xF0;
-        private static string SoftRef = "";
-        private static int Start_Address1 = 0;
-        private static int End_Address1 = 0;
-        private static int cmd_Length1 = 0;
-        private static int Start_Address2 = 0;
-        private static int cmd_Length2 = 0;
+        private static string softRef = "";
+        private static int startAddress1 = 0;
+        private static int endAddress1 = 0;
+        private static int cmdLength1 = 0;
+        private static int startAddress2 = 0;
+        private static int cmdLength2 = 0;
         private const string DOWNLOAD_FINISHED_MSG = "پایان دانلود";
         private const string DOWNLOAD_FAILED_ERROR = "دانلود با خطا مواجه شد";
         private const string ECU_NOT_DETECTED_ERROR = "ای سی یو شناسایی نشد";
         private const string CLEARING_ERROR = "پاکسازی ای سی یو با خطا مواجه شد";
         private const string ENTERED_TO_ZONE_1 = "شروع ناحیه اول";
         private const string ENTERED_TO_ZONE_2 = "شروع ناحیه دوم";
-
-        // Data haye simulator in tabe dar masir zir zakhire shode ast
-        // E:\User\work\MASTER DIAG\M.Mahdi Farrokhy\Remap Files\EasyU CAN\EasyU Download Simulator
-
-        // Start Address Of Zone 2 is 0x20000
-        // Command Length Of Zone 2 is 0x20000
-        public static bool Crouse_EasyU25()
+		
+        public static bool crouseEasyU2_5()
         {
-            ProcBarVal = 0;
+            procBarVal = 0;
             string resp = "";
 
-            // Zone 1 Variables
-            Start_Address1 = DumpConnection.Start_Address();           // Start Address Of Zone 1
-            End_Address1 = DumpConnection.End_Address();               // Start Address Of Zone 1
-            cmd_Length1 = Start_Address1 - End_Address1;            // Length Of Zone 1
+            startAddress1 = DumpConnection.startAddress();
+            endAddress1 = DumpConnection.endAddress();
+            cmdLength1 = startAddress1 - endAddress1;
+			
+            int numOfFrames1 = cmdLength1 / FRAME_LEN;
+            int rest1 = cmdLength1 % FRAME_LEN;
+            int last_add1 = endAddress1 - rest1 + 1;
 
-            int NumOfFrames1 = cmd_Length1 / FRAME_LEN;             // Number Of Commands Of Zone 1 With The Lenght F1
-            int rest1 = cmd_Length1 % FRAME_LEN;                    // Length Of The Last Frame
-            int last_add1 = End_Address1 - rest1 + 1;   // Start Address Of The Last Frame
+            string[] cmd1 = new string[cmdLength1];
+            string[] frames1 = new string[numOfFrames1];
+            string[] finalcmd1 = new string[numOfFrames1 + 1];
 
-            string[] cmd1 = new string[cmd_Length1];
-            string[] Frames1 = new string[NumOfFrames1];
-            string[] Final_cmd1 = new string[NumOfFrames1 + 1];
+            startAddress2 = 0x20000;
+            cmdLength2 = 0x20000;
 
-            // Zone 2 Variables
-            Start_Address2 = 0x20000;                               // Start Address Of Zone 1
-            cmd_Length2 = 0x20000;                                  // Length Of Zone 1
+            int numOfFrames2 = cmdLength2 / FRAME_LEN;
+            int rest2 = cmdLength1 % FRAME_LEN;
+            int last_add2 = startAddress2 + cmdLength2 - rest2;
 
-            int NumOfFrames2 = cmd_Length2 / FRAME_LEN;             // Number Of Commands Of Zone 1 With The Lenght F1
-            int rest2 = cmd_Length1 % FRAME_LEN;                    // Length Of The Last Frame
-            int last_add2 = Start_Address2 + cmd_Length2 - rest2;   // Start Address Of The Last Frame
+            string[] cmd2 = new string[cmdLength2];
+            string[] frames2 = new string[numOfFrames2];
+            string[] finalcmd2 = new string[numOfFrames2 + 1];      
 
-            string[] cmd2 = new string[cmd_Length2];
-            string[] Frames2 = new string[NumOfFrames2];
-            string[] Final_cmd2 = new string[NumOfFrames2 + 1];
-
-
-            // Progress Bar Variables
-            double ProgBarRatio1 = (double)(NumOfFrames1) / (double)(NumOfFrames1 + NumOfFrames2); // Nesbate Zone 1 Az Progress Bar
-            double ProgBarRatio2 = 1 - ProgBarRatio1; // Nesbate Zone 2 Az Progress Bar
+            double progBarRatio1 = (double)(numOfFrames1) / (double)(numOfFrames1 + numOfFrames2);
+            double progBarRatio2 = 1 - progBarRatio1;
 
             Logger.Write(" ");
             Logger.Write("** Download to ECU");
@@ -72,165 +62,144 @@ namespace ProMap
             Logger.Write("** calibration:  " + AutoDetection.Calibref);
             Logger.Write(" ");
 
-            // Initialize Board
-            CanECUs.CAN_IC_Init("07 E0", "FF FF");
+            CanECUs.icInit("07 E0", "FF FF");
             Thread.Sleep(100);
 
-            // Send Commands
-            // 02 10 81 - Connetion
             do
             {
-                CanECUs.CAN_Regular_Send("07 E0", "02 10 81");
+                CanECUs.sendCommand("07 E0", "02 10 81");
                 Thread.Sleep(50);
-                CanECUs.CAN_GetData(ref resp);
+                CanECUs.getData(ref resp);
             } while (resp.Substring(12, 2) == "7F");
 
-            // 02 21 91 - SoftRef
-                CanECUs.CAN_Regular_Send("07 E0", "02 21 91");
+                CanECUs.sendCommand("07 E0", "02 21 91");
                 Thread.Sleep(50);
-                CanECUs.CAN_GetData(ref resp);
+                CanECUs.getData(ref resp);
                 if (resp.Substring(12, 2) == "7F" || resp == "")
                 {
                     Message.messageBox_Show_Ok("xs", ECU_NOT_DETECTED_ERROR);
                     return false;
                 }
-            SoftRef = CanECUs.Can_SR_Normalize(resp);
+            softRef = CanECUs.srNormalize(resp);
 
-            // 02 21 81
             do
             {
-                CanECUs.CAN_Regular_Send("07 E0", "02 21 81");
+                CanECUs.sendCommand("07 E0", "02 21 81");
                 Thread.Sleep(50);
-                CanECUs.CAN_GetData(ref resp);
+                CanECUs.getData(ref resp);
             } while (resp.Substring(12, 2) == "7F");           
 
-            // 02 10 85
             do
             {
-                CanECUs.CAN_Regular_Send("07 E0", "02 10 85");
+                CanECUs.sendCommand("07 E0", "02 10 85");
                 Thread.Sleep(50);
-                CanECUs.CAN_GetData(ref resp);
+                CanECUs.getData(ref resp);
             } while (resp.Substring(12, 2) == "7F");          
 
-            // 02 10 85
             do
             {
-                CanECUs.CAN_Regular_Send("07 E0", "02 10 85");
+                CanECUs.sendCommand("07 E0", "02 10 85");
                 Thread.Sleep(50);
-                CanECUs.CAN_GetData(ref resp);
+                CanECUs.getData(ref resp);
             } while (resp.Substring(12, 2) == "7F");
 
-            // 02 21 91 - SoftRef
-                CanECUs.CAN_Regular_Send("07 E0", "02 21 91");
+                CanECUs.sendCommand("07 E0", "02 21 91");
                 Thread.Sleep(50);
-                CanECUs.CAN_GetData(ref resp);
+                CanECUs.getData(ref resp);
             if (resp.Substring(12, 2) == "7F")
             {
                 Message.messageBox_Show_Ok("xs", ECU_NOT_DETECTED_ERROR);
                 return false;
             }
 
-            // 02 21 81
             do
             {
-                CanECUs.CAN_Regular_Send("07 E0", "02 10 81");
+                CanECUs.sendCommand("07 E0", "02 10 81");
                 Thread.Sleep(50);
-                CanECUs.CAN_GetData(ref resp);
+                CanECUs.getData(ref resp);
             } while (resp.Substring(12, 2) == "7F");
 
-            // 02 10 85
             do
             {
-                CanECUs.CAN_Regular_Send("07 E0", "02 10 85");
+                CanECUs.sendCommand("07 E0", "02 10 85");
                 Thread.Sleep(50);
-                CanECUs.CAN_GetData(ref resp);
+                CanECUs.getData(ref resp);
             } while (resp.Substring(12, 2) == "7F");
 
-            // 02 3E 00
             do
             {
-                CanECUs.CAN_Regular_Send("07 E0", "02 3E 00");
+                CanECUs.sendCommand("07 E0", "02 3E 00");
                 Thread.Sleep(50);
-                CanECUs.CAN_GetData(ref resp);
+                CanECUs.getData(ref resp);
             } while (resp.Substring(12, 2) == "7F");
 
-            // 02 3E 00
             do
             {
-                CanECUs.CAN_Regular_Send("07 E0", "02 3E 00");
+                CanECUs.sendCommand("07 E0", "02 3E 00");
                 Thread.Sleep(50);
-                CanECUs.CAN_GetData(ref resp);
+                CanECUs.getData(ref resp);
             } while (resp.Substring(12, 2) == "7F");
 
-            // 02 3E 00
             do
             {
-                CanECUs.CAN_Regular_Send("07 E0", "02 3E 00");
+                CanECUs.sendCommand("07 E0", "02 3E 00");
                 Thread.Sleep(50);
-                CanECUs.CAN_GetData(ref resp);
+                CanECUs.getData(ref resp);
             } while (resp.Substring(12, 2) == "7F");
 
-            // 02 27 01
             do
             {
-                CanECUs.CAN_Regular_Send("07 E0", "02 27 01");
+                CanECUs.sendCommand("07 E0", "02 27 01");
                 Thread.Sleep(50);
-                CanECUs.CAN_GetData(ref resp);
+                CanECUs.getData(ref resp);
             } while (resp.Substring(9, 2) == "7F");
 
-            // 06 27 02 35 01 A4 D1
-            CanECUs.CAN_Regular_Send("07 E0", "06 27 02 35 01 A4 D1");
+            CanECUs.sendCommand("07 E0", "06 27 02 35 01 A4 D1");
             Thread.Sleep(50);
-            CanECUs.CAN_GetData(ref resp);
+            CanECUs.getData(ref resp);
             if (resp.Substring(9, 2) == "7F")
             {
                 Message.messageBox_Show_Ok("xs", CLEARING_ERROR);
                 return false;
             }
 
-            // 02 31 01
             do
             {
-                CanECUs.CAN_Regular_Send("07 E0", "02 31 01");
+                CanECUs.sendCommand("07 E0", "02 31 01");
                 Thread.Sleep(50);
-                CanECUs.CAN_GetData(ref resp);
+                CanECUs.getData(ref resp);
             } while (resp.Substring(12, 2) == "7F");
 
-            // 08 34 04 00 00 00 0C 00 00
             do
             {
-                CanECUs.CAN_Regular_Send("07 E0", "08 34 04 00 00 00 0C 00 00");
+                CanECUs.sendCommand("07 E0", "08 34 04 00 00 00 0C 00 00");
                 Thread.Sleep(50);
-                CanECUs.CAN_GetData(ref resp);
+                CanECUs.getData(ref resp);
             } while (resp.Substring(12, 2) == "7F");
 
             frm_Main._FrmMainObj.UpdateMessage(ENTERED_TO_ZONE_1);
-            cmd1 = DumpConnection.Read(Start_Address1, cmd_Length1); // Read Full Command Of Zone 1
+            cmd1 = DumpConnection.read(startAddress1, cmdLength1);
 
-            // Divide Command To Frames With The Length 0xF0
-            for (int i = 0; i < NumOfFrames1; i++)
+            for (int i = 0; i < numOfFrames1; i++)
                 for (int j = 0; j < FRAME_LEN; j++)
-                    Frames1[i] += cmd1[j + i * FRAME_LEN] + " ";
+                    frames1[i] += cmd1[j + i * FRAME_LEN] + " ";
 
-            // Add F1 36 To The Beginning Of The Frames
-            for (int i = 0; i < NumOfFrames1; i++)
+            for (int i = 0; i < numOfFrames1; i++)
             {
-                Final_cmd1[i] = "F1 36 " + Frames1[i];
-                Final_cmd1[i] = Final_cmd1[i].Trim();
+                finalcmd1[i] = "F1 36 " + frames1[i];
+                finalcmd1[i] = finalcmd1[i].Trim();
             }
 
-            // Create The Last Frame Of Command
-            string last_frame = DumpConnection.Last_Frame(last_add1, rest1);
-            Final_cmd1[NumOfFrames1] = (rest1 + 1).ToString("X2") + " 36 " + last_frame;
+            string last_frame = DumpConnection.lastFrame(last_add1, rest1);
+            finalcmd1[numOfFrames1] = (rest1 + 1).ToString("X2") + " 36 " + last_frame;
 
-            for (int i = 0; i < NumOfFrames1 + 1; i++)
+            for (int i = 0; i < numOfFrames1 + 1; i++)
             {
-                CanECUs.CAN_Regular_Send("07 E0", Final_cmd1[i]);
+                CanECUs.sendCommand("07 E0", finalcmd1[i]);
                 Thread.Sleep(15);
-                CanECUs.CAN_GetData(ref resp);
-                UpdateProgressBar(NumOfFrames1, i, ProgBarRatio1);
-
-
+                CanECUs.getData(ref resp);
+                UpdateProgressBar(numOfFrames1, i, progBarRatio1);
+            
                 if (resp.Trim() == "" || resp.Substring(12, 2) == "7F" || resp.Substring(9, 5) != "01 76")
                 {
                     Message.messageBox_Show_Ok("xs", DOWNLOAD_FAILED_ERROR);
@@ -239,26 +208,22 @@ namespace ProMap
             }
 
             frm_Main._FrmMainObj.UpdateMessage(ENTERED_TO_ZONE_2);
-            cmd2 = DumpConnection.Read(Start_Address2, cmd_Length2); // Read Full Command Of Zone 2
+            cmd2 = DumpConnection.read(startAddress2, cmdLength2);
 
-            // Divide Command To Frames With The Length 0xF0
-            for (int i = 0; i < NumOfFrames2; i++)
+            for (int i = 0; i < numOfFrames2; i++)
                 for (int j = 0; j < FRAME_LEN; j++)
-                    Frames2[i] += cmd2[j + i * FRAME_LEN] + " ";
+                    frames2[i] += cmd2[j + i * FRAME_LEN] + " ";
 
-            // Add F1 36 To The Beginning Of The Frames
-            for (int i = 0; i < NumOfFrames2; i++)
-                Final_cmd2[i] = "F1 36 " + Frames2[i].Trim();
+            for (int i = 0; i < numOfFrames2; i++)
+                finalcmd2[i] = "F1 36 " + frames2[i].Trim();
 
-            // Create The Last Frame Of Command
-            Final_cmd2[NumOfFrames2] = (rest2+1).ToString("X2") + " 36 " + DumpConnection.Last_Frame(last_add2, rest2);
-            for (int i = 0; i < NumOfFrames2 + 1; i++)
+            finalcmd2[numOfFrames2] = (rest2+1).ToString("X2") + " 36 " + DumpConnection.lastFrame(last_add2, rest2);
+            for (int i = 0; i < numOfFrames2 + 1; i++)
             {
-                CanECUs.CAN_Regular_Send("07 E0", Final_cmd2[i]);
+                CanECUs.sendCommand("07 E0", finalcmd2[i]);
                 Thread.Sleep(15);
-                CanECUs.CAN_GetData(ref resp);
-                UpdateProgressBar(NumOfFrames2, i, ProgBarRatio2);
-
+                CanECUs.getData(ref resp);
+                UpdateProgressBar(numOfFrames2, i, progBarRatio2);
 
                 if (resp.Trim() == "" || resp.Substring(12, 2) == "7F" || resp.Substring(9, 5) != "01 76")
                 {
@@ -274,8 +239,8 @@ namespace ProMap
         public static void UpdateProgressBar(int TotalNumber, int counter, double Ratio)
         {
             double progbar_value = (counter * 100) / TotalNumber;
-            ProcBarVal = (int)(progbar_value * Ratio);
-            frm_Main._FrmMainObj.ProgressBar_Set(ProcBarVal);
+            procBarVal = (int)(progbar_value * Ratio);
+            frm_Main._FrmMainObj.ProgressBar_Set(procBarVal);
         }
 
     }

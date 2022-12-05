@@ -1,154 +1,142 @@
-		// Wait For The Given Time (ms) Until The Given Number Of Bytes Is Read From The Buffer
-		// If The Read Number Of Bytes In This Time Is Less Than Excepted Returns False
-		// Else Returns True
-		public static bool WaitForBytes(int BytesToCheck = 1, int WaitingTime = 100)
+		public static bool waitForBytes(int bytesToCheck = 1, int waitingTime = 100)
         {
             bool result = false;
             DateTime TimeHolder = DateTime.Now;
-            while ((DateTime.Now.Ticks < TimeHolder.Ticks + WaitingTime) && (serialPort1.BytesToRead < BytesToCheck))
+            while ((DateTime.Now.Ticks < TimeHolder.Ticks + waitingTime) && (serialPort1.BytesToRead < bytesToCheck))
                 if (serialPort1.BytesToRead < 0)
                 {
                     result = false;
                     return result;
                 }
 
-            result = (DateTime.Now.Millisecond < TimeHolder.Millisecond + WaitingTime);
+            result = (DateTime.Now.Millisecond < TimeHolder.Millisecond + waitingTime);
 
             return result;
         }
         
-
-        // This Function Receives The Data From Buffer As The Response Of The ECU
-		// And Removes The Unwanted Bytes From It. Like 10, 21..22..23, Or 6D 11
-        public static bool ReadMsg(ref string Response, ref string FrameByte)
+        public static bool readMsg(ref string response, ref string frameByte)
         {
-            Response = "";
-            FrameByte = "";
+            response = "";
+            frameByte = "";
 
-            string Header2B = "";
-            string BodySize = "";
-            string Body = "";
-            string[] CANBuffer = new string[2];
-            string ErrorText = "";
-            string ErrorMsg = "";
-            string Continue = "30 00 10 00 00 00 00 00";
+            string header2B = "";
+            string bodySize = "";
+            string body = "";
+            string[] canBuffer = new string[2];
+            string errorText = "";
+            string errorMsg = "";
+            string continueCommand = "30 00 10 00 00 00 00 00";
             string XX = "";
-            int NumOfBytes = 0; // SizeByte In Integer
-            int MsgCount = 0; // The Number Of Lines The Response Command Has
-            int BodyBytes = 0; // The Number Of Bytes Necessary To Read
-            int RestOfBody = 0; // Size Of The Rest Of Body After The Forst Frame
+            int numOfBytes = 0;
+            int msgCount = 0;
+            int bodyBytes = 0;
+            int restOfBody = 0;
 
             Repeat:
-            if (!WaitForBytes())
+            if (!waitForBytes())
             {
-                ErrorText = "No Data Received";
-                goto ErrHandler;
+                errorText = "No Data Received";
+                goto ErrorHandler;
             }
 
-            CANBuffer[0] = serialPort1.ReadByte().ToString("X2");
-            if (CANBuffer[0] != "6D")
+            canBuffer[0] = serialPort1.ReadByte().ToString("X2");
+            if (canBuffer[0] != "6D")
                 goto Repeat;
-            // 6D Received
 
-            if (!WaitForBytes())
+            if (!waitForBytes())
             {
-                ErrorText = "Bytes Lost After '6D'";
-                goto ErrHandler;
+                errorText = "Bytes Lost After 6D";
+                goto ErrorHandler;
             }
 
-            CANBuffer[1] = serialPort1.ReadByte().ToString("X2");
-            // 11 Received
+            canBuffer[1] = serialPort1.ReadByte().ToString("X2");
 
-            if (CANBuffer[0] == "6D" && CANBuffer[1] == "11")
+            if (canBuffer[0] == "6D" && canBuffer[1] == "11")
             {
-                if (!WaitForBytes(2, 100))
+                if (!waitForBytes(2, 100))
                 {
-                    ErrorText = "Header Bytes Lost After '6D 11'";
-                    goto ErrHandler;
+                    errorText = "Header Bytes Lost After '6D 11'";
+                    goto ErrorHandler;
                 }
 
-                CANBuffer[0] = serialPort1.ReadByte().ToString("X2"); // 07
-                CANBuffer[1] = serialPort1.ReadByte().ToString("X2"); // E8
+                canBuffer[0] = serialPort1.ReadByte().ToString("X2");
+                canBuffer[1] = serialPort1.ReadByte().ToString("X2");
             }
             else
                 goto Repeat;
 
-            Header2B = CANBuffer[0].Replace(" ", "") + " " + CANBuffer[1].Replace(" ", "");
-            // "6D 11 07 E8" Received, The Header2B is "07 E8"
+            header2B = canBuffer[0].Replace(" ", "") + " " + canBuffer[1].Replace(" ", "");
 
-            if (!WaitForBytes(2, 100))
+            if (!waitForBytes(2, 100))
             {
-                ErrorText = "Length Byte Lost";
-                goto ErrHandler;
+                errorText = "Length Byte Lost";
+                goto ErrorHandler;
             }
 
-            XX = serialPort1.ReadByte().ToString("X2"); // = 08
-            BodySize = serialPort1.ReadByte().ToString("X2"); // Size Byte
-            if (BodySize == "10")
+            XX = serialPort1.ReadByte().ToString("X2");
+            bodySize = serialPort1.ReadByte().ToString("X2");
+            if (bodySize == "10")
             {
-                BodySize = serialPort1.ReadByte().ToString("X2"); // The True Size Byte
-                FrameByte = "10";
+                bodySize = serialPort1.ReadByte().ToString("X2");
+                frameByte = "10";
             }
             else
-                FrameByte = "";
-            // "6D 11 07 E8 SB" Received, Header: "07 E8", SizeByte: SB
+                frameByte = "";
 
-            NumOfBytes = int.Parse(BodySize, System.Globalization.NumberStyles.HexNumber);
+            numOfBytes = int.Parse(bodySize, System.Globalization.NumberStyles.HexNumber);
 
-            if ((NumOfBytes + 1) % 7 == 0)
-                MsgCount = (NumOfBytes + 1) / 7;
+            if ((numOfBytes + 1) % 7 == 0)
+                msgCount = (numOfBytes + 1) / 7;
             else
-                MsgCount = ((NumOfBytes + 1) / 7) + 1;
+                msgCount = ((numOfBytes + 1) / 7) + 1;
 
-            if (MsgCount == 1)
+            if (msgCount == 1)
             {
-                BodyBytes = 7;
-                RestOfBody = 0;
+                bodyBytes = 7;
+                restOfBody = 0;
             }
-            else if (MsgCount == 2)
+            else if (msgCount == 2)
             {
-                BodyBytes = 19;
-                RestOfBody = BodyBytes - 5;
+                bodyBytes = 19;
+                restOfBody = bodyBytes - 5;
             }
-            else if (MsgCount > 2)
+            else if (msgCount > 2)
             {
-                BodyBytes = (13 * MsgCount) - 6;
-                RestOfBody = BodyBytes - 6;
+                bodyBytes = (13 * msgCount) - 6;
+                restOfBody = bodyBytes - 6;
             }
 
-            // No Error Occured
-            if (FrameByte == "") // Response Command Is Single Frame
+            if (frameByte == ""
                 for (int i = 0; i < 7; i++)
-                    Body += serialPort1.ReadByte().ToString("X2") + " ";
+                    body += serialPort1.ReadByte().ToString("X2") + " ";
 
-            else if (FrameByte == "10") // Response Command Is Multiframe
+            else if (frameByte == "10")
             {
                 for (int i = 0; i < 6; i++)
-                    Body += serialPort1.ReadByte().ToString("X2") + " ";               
-                CanECUs.CAN_Send("07 E0", Continue);
+                    body += serialPort1.ReadByte().ToString("X2") + " ";               
+                CanECUs.sendCommand("07 E0", continueCommand);
 
-                if (!WaitForBytes(RestOfBody, 1000))
+                if (!waitForBytes(restOfBody, 1000))
                 {
-                    ErrorText = "Response Command Is Not Fully Received";
-                    goto ErrHandler;
+                    errorText = "Response Command Is Not Fully Received";
+                    goto ErrorHandler;
                 }
 
-                for (int i = 0; i < RestOfBody; i++)
-                    Body += serialPort1.ReadByte().ToString("X2") + " ";
+                for (int i = 0; i < restOfBody; i++)
+                    body += serialPort1.ReadByte().ToString("X2") + " ";
             }
 
-            Body = Body.Trim(); // Removes The SPACE At The End Of The Command
+            body = body.Trim();
 
-            ErrorMsg = "";
-            Response = Header2B + " " + BodySize + " " + Body; // 07 E8 + Size + Body: Body Contains "60 6D 11 07 E8 08" For Next Frames
+            errorMsg = "";
+            response = header2B + " " + bodySize + " " + body;
 
             return true;
 
-            // Error Occured
-            ErrHandler:
-            Header2B = "";
-            Body = "";
-            ErrorMsg = "[!ReadMsg] " + ErrorText;
-            Message.messageBox_Show_Ok("xs", ErrorMsg);
+            ErrorHandler:
+            header2B = "";
+            body = "";
+            errorMsg = "[!ReadMsg] " + errorText;
+            Message.messageBox_Show_Ok("xs", errorMsg);
             return false;
         }

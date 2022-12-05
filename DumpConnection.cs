@@ -6,79 +6,72 @@ using System.IO;
 
 namespace ProMap
 {
-    // This Class Is Created For Reading Download Data From .bin Files In The Dump Folder
-    // And Save The Commands In Variables
     class DumpConnection
     {
-        // This Method Reads All The Command From The .bin File And 
-        // Returns All The Command Frames With The Length 0xF0 Except The Last One
-        // Which Is Shorter Than 0xF0
-        public static string[] Read(int Add_Start, int Stream_Leng)
+        private static string dumpFileName = "./Dump/" + AutoDetection.BinFileName;
+		
+        public static string[] read(int startAddress, int streamLength)
         {
-            string[] cmd = new string[Stream_Leng];
-            string DumpFileName = "./Dump/" + AutoDetection.BinFileName;
-            BinaryReader binReader = new BinaryReader(File.Open(DumpFileName, FileMode.Open));
-            binReader.BaseStream.Seek(Add_Start, SeekOrigin.Begin); // Jump To The Start Address
+            string[] cmd = new string[streamLength];
+            BinaryReader reader = new BinaryReader(File.Open(dumpFileName, FileMode.Open));
+            reader.BaseStream.Seek(startAddress, SeekOrigin.Begin);
 
-            // Read Bytes From .bin File And Save Into Cmd Variable As Hex String
-            for (int i = 0; i < Stream_Leng; i++)
-                cmd[i] = binReader.ReadByte().ToString("X2");
+            for (int i = 0; i < streamLength; i++)
+                cmd[i] = reader.ReadByte().ToString("X2");
 
+            reader.Close();
+            return cmd;
+        }
+
+        public static string lastFrame(int lastFrameAddress, int lastFrameLength)
+        {
+            string lastFrame = "";
+            BinaryReader binReader = new BinaryReader(File.Open(dumpFileName, FileMode.Open));
+            binReader.BaseStream.Seek(lastFrameAddress, SeekOrigin.Begin);
+
+            for (int i = 0; i < lastFrameLength; i++)
+                lastFrame += binReader.ReadByte().ToString("X2") + " ";
+
+            lastFrame = lastFrame.Trim();
             binReader.Close();
-            return cmd; // cmd Is A Long Command Read From .bin File
+            return lastFrame;
         }
 
-        // It Returns The Last Fame Of The Command With The Length Shorter Than 0xF0
-        public static string Last_Frame(int Last_Add, int Last_Leng)
+        public static int startAddress()
         {
-            string last_cmd = "";
-            string DumpFileName = "./Dump/" + AutoDetection.BinFileName;
-            BinaryReader binReader = new BinaryReader(File.Open(DumpFileName, FileMode.Open));
-            binReader.BaseStream.Seek(Last_Add, SeekOrigin.Begin); // Jump To The Start Address
+            int startAddress = 0;
+            string startPattern = "42244890";
 
-            // Read Bytes From .bin File And Save Into Cmd Variable As Hex String
-            for (int i = 0; i < Last_Leng; i++)
-                last_cmd += binReader.ReadByte().ToString("X2") + " ";
+            string cmd = getAllBytes();
 
-            last_cmd = last_cmd.Trim();
-            binReader.Close();
-            return last_cmd;
+            startAddress = cmd.IndexOf(startPattern);
+            startAddress += 8;
+            startAddress /= 2;
+            startAddress += 12;
+
+            return startAddress;
         }
 
-        // It Returns The Start Address Of The Command Of The 1st Zone As Aan Integer
-        public static int Start_Address()
+        public static int endAddress()
         {
-            int Start_Address = 0;
-
-            string DumpFileName = "./Dump/" + AutoDetection.BinFileName;
-
-            byte[] allBytes = System.IO.File.ReadAllBytes(DumpFileName);
-            string cmd = BitConverter.ToString(allBytes).Replace("-", "");
-            string pattern = "42244890";
-
-            Start_Address = cmd.IndexOf(pattern);
-            Start_Address += 8;
-            Start_Address /= 2;
-
-            return Start_Address + 12;
-        }
-
-        // It Returns The End Address Of The Command Of The 1st Zone As An Integer
-        public static int End_Address()
-        {
-            int End_Address = 0;
-
-            string DumpFileName = "./Dump/" + AutoDetection.BinFileName;
-
-            byte[] allBytes = System.IO.File.ReadAllBytes(DumpFileName);
-            string cmd = BitConverter.ToString(allBytes).Replace("-", "");
+            int endAddress = 0;
             string pattern = "90482442";
 
-            End_Address = cmd.IndexOf(pattern);
-            End_Address += 8;
-            End_Address /= 2;
+            string cmd = getAllBytes();
 
-            return End_Address + 11;
+            endAddress = cmd.IndexOf(pattern);
+            endAddress += 8;
+            endAddress /= 2;
+            endAddress += 11;
+
+            return endAddress;
+        }
+
+        private static string getAllBytes()
+        {
+            byte[] allBytes = System.IO.File.ReadAllBytes(dumpFileName);
+            string cmd = BitConverter.ToString(allBytes).Replace("-", "");
+            return cmd;
         }
     }
 }
