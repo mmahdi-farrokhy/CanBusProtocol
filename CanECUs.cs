@@ -209,51 +209,51 @@ namespace ProMap
             return (ecuCommand != "");
         }
 
-        public static string srNormalize(string SR)
+        public static string srNormalize(string sr)
         {
-            string SoftRef = "";
+            string softRef = "";
             int[] dec = new int[10];
             char[] chars = new char[10];
 
             for (int i = 0; i < 10; i++)
-                SoftRef += System.Convert.ToChar(strToHex(SR.Substring(i * 3, 2).ToString())).ToString();
+                softRef += System.Convert.ToChar(strToHex(sr.Substring(i * 3, 2).ToString())).ToString();
 
-            return SoftRef;
+            return softRef;
         }
 
-        public static string brNormalize(string BR)
+        public static string brNormalize(string br)
         {
-            string Result = "";
+            string result = "";
             int[] dec = new int[10];
             char[] chars = new char[10];
 
             for (int i = 0; i < 10; i++)
-                Result += System.Convert.ToChar(strToHex(BR.Substring(i * 3, 2).ToString())).ToString();
+                result += System.Convert.ToChar(strToHex(br.Substring(i * 3, 2).ToString())).ToString();
 
-            return Result;
+            return result;
         }
         
-        public static string caNormalize(string CA)
+        public static string caNormalize(string ca)
         {
-            string Result = "";
+            string result = "";
             int[] dec = new int[10];
             char[] chars = new char[10];
 
             for (int i = 0; i < 10; i++)
-                Result += System.Convert.ToChar(strToHex(CA.Substring(i * 3, 2).ToString())).ToString();
+                result += System.Convert.ToChar(strToHex(ca.Substring(i * 3, 2).ToString())).ToString();
 
-            return Result;
+            return result;
         }
 
-        static public int strToHex(string Byte)
+        static public int strToHex(string byteToConvert)
         {
-            int Result = 0;
-            char B1 = Byte[0];
-            char B0 = Byte[1];
+            int result = 0;
+            char b1 = byteToConvert[0];
+            char b0 = byteToConvert[1];
             int mult1 = 0;
             int mult0 = 0;
 
-            switch (B0)
+            switch (b0)
             {
                 case '0':
                     mult0 = 0;
@@ -320,7 +320,7 @@ namespace ProMap
                     break;
             }
 
-            switch (B1)
+            switch (b1)
             {
                 case '0':
                     mult1 = 0;
@@ -387,9 +387,9 @@ namespace ProMap
                     break;
             }
 
-            Result = (mult1 * 16) + mult0;
+            result = (mult1 * 16) + mult0;
 
-            return Result;
+            return result;
         }
     }
 }
